@@ -5,6 +5,12 @@ In Kubernetes there is few different way to release an application, you have to 
 to make your infrastructure relisiant. Before experimenting, checkout the blog post about
 [Kubernetes deployment strategies](link)
 
+- recreate: terminate the old version and release the new one
+- ramped: release a new version on a rolling update fashion, one after the other
+- blue/green: release a new version alongside the old version then switch traffic
+- canary: release a new version to a subset of users, then proceed to a full rollout
+- a/b testing: release a new version to a subset of users in a precise way (HTTP headers, cookie, weight, etc.). This doesn’t come out of the box with Kubernetes, it imply extra work to setup a more advanced infrastructure (Istio, Linkerd, Traeffik, custom nginx/haproxy, etc).
+
 
 ## Getting started
 
