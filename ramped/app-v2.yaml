@@ -1,0 +1,54 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: my-app
+  labels:
+    app: my-app
+spec:
+  replicas: 3
+
+  # Here we define the rolling update strategy
+  # - maxSurge define how many pod we can add at a time
+  # - maxUnavailable define how many pod can be unavailable
+  #   during the rolling update
+  #
+  # Setting maxUnavailable to 0 would make sure we have the appropriate
+  # capacity during the rolling update.
+  # You can also use percentage based value instead of integer.
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+
+  # The selector field tell the deployment which pod to update with
+  # the new version. This field is optional, but if you have labels
+  # uniquely defined for the pod, in this case the "version" label,
+  # then we need to redefine the matchLabels and eliminate the version
+  # field from there.
+  selector:
+    matchLabels:
+      app: my-app
+  template:
+    metadata:
+      labels:
+        app: my-app
+        version: v2.0.0
+    spec:
+      containers:
+      - name: my-app
+        image: containersol/k8s-deployment-strategies-demo
+        imagePullPolicy: Never
+        ports:
+        - containerPort: 8080
+        env:
+        - name: VERSION
+          value: v2.0.0
+        livenessProbe:
+          httpGet:
+            path: /healthz
+            port: 8080
+        readinessProbe:
+          httpGet:
+            path: /healthz
+            port: 8080

@@ -1,0 +1,23 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: my-app-v2
+  labels:
+    app: my-app
+spec:
+  replicas: 3
+  template:
+    metadata:
+      labels:
+        app: my-app
+        version: v2.0.0
+    spec:
+      containers:
+      - name: my-app
+        image: containersol/k8s-deployment-strategies-demo
+        imagePullPolicy: Never
+        ports:
+        - containerPort: 8080
+        env:
+        - name: VERSION
+          value: v2.0.0
