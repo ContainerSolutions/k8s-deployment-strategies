@@ -49,6 +49,8 @@ $ export SERVICE_URL=$(minikube service istio-ingress --url | head -n1)
 $ while sleep 0.1; do curl $SERVICE_URL; done;
 ```
 
+You should see 1 request on 10 ending up in the version 2.
+
 In the rules.yaml file, you can edit the weight of each route and apply the changes as follow:
 
 ```

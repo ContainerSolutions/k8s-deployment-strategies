@@ -5,7 +5,7 @@ spec:
   route:
   - tags:
       version: v1.0.0
-    weight: 10
+    weight: 90
   - tags:
       version: v2.0.0
-    weight: 90
+    weight: 10
