@@ -20,13 +20,13 @@ To see the deployment in action, open a new terminal and run the following comma
 $ watch -n1 kubectl get po
 ```
 
-Then deploy the version 2 of the application
+Then deploy the version 2 of the application:
 
 ```
 $ kubectl apply -f app-v2.yaml
 ```
 
-Test if the second deployment progress:
+Test the second deployment progress:
 
 ```
 $ export SERVICE_URL=$(minikube service my-app --url)
@@ -52,7 +52,7 @@ $ kubectl rollout resume deploy my-app
 ```
 
 
-Cleanup
+Cleanup:
 
 ```
 $ kubectl delete all -l app=my-app

@@ -48,7 +48,7 @@ kubectl delete deploy my-app-v1
 ```
 
 
-Cleanup
+Cleanup:
 
 ```
 $ kubectl delete all -l app=my-app

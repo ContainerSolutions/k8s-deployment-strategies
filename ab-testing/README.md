@@ -59,7 +59,7 @@ $ istioctl replace -f ./rules.yaml
 
 
 
-Cleanup
+Cleanup:
 
 ```
 $ kubectl delete all -l app=my-app

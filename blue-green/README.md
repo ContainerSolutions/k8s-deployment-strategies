@@ -21,7 +21,7 @@ To see the deployment in action, open a new terminal and run the following comma
 $ watch -n1 kubectl get po
 ```
 
-Then deploy the version 2 of the application
+Then deploy the version 2 of the application:
 
 ```
 $ kubectl apply -f app-v2.yaml
@@ -39,7 +39,7 @@ to all pods with label version=v2.0.0:
 $ kubectl patch service my-app -p '{"spec":{"selector":{"version":"v2.0.0"}}}'
 ```
 
-Test if the second deployment was successful
+Test if the second deployment was successful:
 
 ```
 $ export SERVICE_URL=$(minikube service my-app --url)
@@ -59,7 +59,7 @@ $ kubectl delete deploy my-app-v1
 ```
 
 
-Cleanup
+Cleanup:
 
 ```
 $ kubectl delete all -l app=my-app
