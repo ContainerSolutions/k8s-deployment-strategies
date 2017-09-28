@@ -23,9 +23,11 @@ spec:
           value: v2.0.0
         livenessProbe:
           httpGet:
-            path: /healthz
-            port: 8080
+            path: /-/liveness
+            port: 8081
         readinessProbe:
           httpGet:
-            path: /healthz
-            port: 8080
+            path: /-/readiness
+            port: 8081
+          failureThreshold: 1
+          periodSeconds: 1

@@ -19,3 +19,5 @@ $ docker run -d -p 8080:8080 -h host-1 -e VERSION=v1.0.0 containersol/k8s-deploy
 $ curl localhost:8080
 > 2017-09-20 12:00:55.425290606 +0000 UTC m=+2.506207642 - Host: host-1, Version: v1.0.0
 ```
+
+Liveness and readiness probes are replying on `:8081/-/liveness` and `:8081/-/readiness`.
