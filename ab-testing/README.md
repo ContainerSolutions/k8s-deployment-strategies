@@ -6,7 +6,7 @@ Deploy Istio to minikube using Helm:
 ```
 $ helm init
 $ helm repo add incubator http://storage.googleapis.com/kubernetes-charts-incubator
-$ helm install --name service-mesh incubator/istio
+$ helm install --name service-mesh incubator/istio --version 0.1.6-chart6
 ```
 
 Deploy the service and ingress:
