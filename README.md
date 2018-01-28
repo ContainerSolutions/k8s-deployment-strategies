@@ -34,7 +34,7 @@ $ minikube start --kubernetes-version v1.8.0
 ```
 
 
-## Vizualising using Prometheus and Grafana
+## Visualizing using Prometheus and Grafana
 
 The following steps describe how to setup Prometheus and Grafana to visualize
 the progress and performance of a deployment.
