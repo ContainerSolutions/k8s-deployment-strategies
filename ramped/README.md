@@ -4,6 +4,8 @@ Ramped deployment
 > Version B is slowly rolled out and replacing version A. Also known as
 rolling-update or incremental.
 
+![kubernetes ramped deployment](grafana-ramped.png)
+
 The ramped deployment strategy consists of slowly rolling out a version of an
 application by replacing instances one after the other until all the instances
 are rolled out. It usually follows the following process: with a pool of version
