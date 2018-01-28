@@ -94,7 +94,7 @@ In the rules.yaml file, you can edit the weight of each route and apply the
 changes as follow:
 
 ```
-$ istioctl replace -f ./rules.yaml
+$ kubectl apply -f ./rules-weight.yaml
 ```
 
 ### Shift traffic based on headers
