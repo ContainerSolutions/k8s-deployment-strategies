@@ -4,6 +4,8 @@ Shadow deployment
 > Version B receives real-world traffic alongside version A and doesn’t impact
 the response.
 
+![kubernetes shadow deployment](grafana-shadow.png)
+
 A shadow deployment consists of releasing version B alongside version A, fork
 version A’s incoming requests and send them to version B as well without
 impacting production traffic. This is particularly useful to test production

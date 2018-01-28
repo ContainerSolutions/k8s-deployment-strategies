@@ -114,3 +114,11 @@ Blue/Green:
 Canary:
 
 ![Kubernetes deployment canary](canary/grafana-canary.png)
+
+A/B testing:
+
+![kubernetes ab-testing deployment](ab-testing/grafana-ab-testing.png)
+
+Shadow:
+
+![kubernetes shadow deployment](shadow/grafana-shadow.png)

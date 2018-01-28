@@ -3,6 +3,8 @@ A/B testing using Istio
 
 > Version B is released to a subset of users under specific condition.
 
+![kubernetes ab-testing deployment](grafana-ab-testing.png)
+
 A/B testing deployments consists of routing a subset of users to a new
 functionality under specific conditions. It is usually a technique for making
 business decisions based on statistics, rather than a deployment strategy.
