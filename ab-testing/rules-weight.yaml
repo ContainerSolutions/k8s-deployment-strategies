@@ -1,0 +1,16 @@
+# Shift traffic based on weight
+apiVersion: config.istio.io/v1alpha2
+kind: RouteRule
+metadata:
+  name: my-app
+spec:
+  destination:
+    name: my-app
+  precedence: 1
+  route:
+  - labels:
+      version: v1.0.0
+    weight: 90
+  - labels:
+      version: v2.0.0
+    weight: 10

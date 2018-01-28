@@ -5,7 +5,7 @@ metadata:
   labels:
     app: my-app
 spec:
-  replicas: 3
+  replicas: 10
 
   # Here we define the rolling update strategy
   # - maxSurge define how many pod we can add at a time
@@ -34,23 +34,35 @@ spec:
       labels:
         app: my-app
         version: v2.0.0
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "9101"
     spec:
       containers:
       - name: my-app
-        image: containersol/k8s-deployment-strategies-demo
-        imagePullPolicy: Never
+        image: containersol/k8s-deployment-strategies
         ports:
-        - containerPort: 8080
+        - name: http
+          containerPort: 8080
+        - name: probe
+          containerPort: 8086
+        - name: metrics
+          containerPort: 9101
         env:
         - name: VERSION
           value: v2.0.0
         livenessProbe:
           httpGet:
-            path: /-/liveness
-            port: 8081
+            path: /live
+            port: probe
+          initialDelaySeconds: 5
+          periodSeconds: 5
         readinessProbe:
           httpGet:
-            path: /-/readiness
-            port: 8081
-          failureThreshold: 1
-          periodSeconds: 1
+            path: /ready
+            port: probe
+
+          # Intial delay is set to a high value to have a better
+          # visibility of the ramped deployment
+          initialDelaySeconds: 15
+          periodSeconds: 5

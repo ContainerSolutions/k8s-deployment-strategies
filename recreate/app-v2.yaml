@@ -22,21 +22,31 @@ spec:
       labels:
         app: my-app
         version: v2.0.0
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "9101"
     spec:
       containers:
       - name: my-app
-        image: containersol/k8s-deployment-strategies-demo
-        imagePullPolicy: Never
+        image: containersol/k8s-deployment-strategies
         ports:
-        - containerPort: 8080
+        - name: http
+          containerPort: 8080
+        - name: probe
+          containerPort: 8086
+        - name: metrics
+          containerPort: 9101
         env:
         - name: VERSION
           value: v2.0.0
         livenessProbe:
           httpGet:
-            path: /-/liveness
-            port: 8080
+            path: /live
+            port: probe
+          initialDelaySeconds: 5
+          periodSeconds: 5
         readinessProbe:
           httpGet:
-            path: /-/readiness
-            port: 8080
+            path: /ready
+            port: probe
+          periodSeconds: 5

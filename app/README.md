@@ -1,23 +1,52 @@
-Dummy show hostname and version application
-===========================================
+Dummy application which display hostname and version
+====================================================
 
-> Really simple GoLang webserver which purpose is to reply with the hostname and, if existing, the environment variable VERSION
+> GoLang webserver which purpose is to reply with the hostname and if existing,
+the environment variable VERSION.
 
 ## Getting started
 
+### Development
+
+Install dependencies using [dep](https://github.com/golang/dep):
+
 ```
-# Compile
-$ CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o app .
+$ dep ensure
+$ go run main.go
+```
 
-# Build
-$ docker build -t containersol/k8s-deployment-strategies-demo .
+### Docker
 
-# Run
-$ docker run -d -p 8080:8080 -h host-1 -e VERSION=v1.0.0 containersol/k8s-deployment-strategies-demo
+#### Build
 
-# Query
+```
+$ docker build -t containersol/k8s-deployment-strategies .
+```
+
+#### Run
+
+```
+$ docker run -d \
+    --name app \
+    -p 8080:8080 \
+    -h host-1 \
+    -e VERSION=v1.0.0
+    containersol/k8s-deployment-strategies
+```
+
+#### Test
+
+```
 $ curl localhost:8080
-> 2017-09-20 12:00:55.425290606 +0000 UTC m=+2.506207642 - Host: host-1, Version: v1.0.0
+2018-01-28T00:22:04+01:00 - Host: host-1, Version: v1.0.0
 ```
 
-Liveness and readiness probes are replying on `:8081/-/liveness` and `:8081/-/readiness`.
+Liveness and readiness probes are replying on `:8086/live` and `:8086/ready`.
+
+Prometheus metrics are served at `:9101/metrics`.
+
+#### Cleanup
+
+```
+$ docker stop app
+```

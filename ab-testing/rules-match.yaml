@@ -1,0 +1,34 @@
+# Shift traffic depending on X-API-Version headers
+apiVersion: config.istio.io/v1alpha2
+kind: RouteRule
+metadata:
+  name: my-app-v1
+spec:
+  destination:
+    name: my-app
+  precedence: 1
+  route:
+  - labels:
+      version: v1.0.0
+  match:
+    request:
+      headers:
+        x-api-version:
+          exact: "v1.0.0"
+---
+apiVersion: config.istio.io/v1alpha2
+kind: RouteRule
+metadata:
+  name: my-app-v2
+spec:
+  destination:
+    name: my-app
+  precedence: 1
+  route:
+  - labels:
+      version: v2.0.0
+  match:
+    request:
+      headers:
+        x-api-version:
+          exact: "v2.0.0"
