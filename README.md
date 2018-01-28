@@ -96,3 +96,21 @@ sum(rate(http_requests_total{app="my-app"}[5m])) by (version)
 ```
 
 To have a better overview of the version, add `{{version}}` in the legend field.
+
+#### Example graph
+
+Recreate:
+
+![Kubernetes deployment recreate](recreate/grafana-recreate.png)
+
+Ramped:
+
+![Kubernetes deployment ramped](ramped/grafana-ramped.png)
+
+Blue/Green:
+
+![Kubernetes deployment blue-green](blue-green/grafana-blue-green.png)
+
+Canary:
+
+![Kubernetes deployment canary](canary/grafana-canary.png)
