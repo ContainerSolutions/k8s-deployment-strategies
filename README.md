@@ -4,10 +4,9 @@ Kubernetes deployment strategies
 > In Kubernetes there is few different way to release an application, you have
 to carefully choose the right strategy to make your infrastructure relisiant.
 
-Before experimenting, checkout the blog post about [Kubernetes deployment
-strategies](https://container-solutions.com/kubernetes-deployment-strategies/)
-and [Six Strategies for Application Deployment](https://thenewstack.io/deployme
-nt-strategies/).
+Before experimenting, checkout the blog post about
+[Kubernetes deployment strategies](https://container-solutions.com/kubernetes-deployment-strategies/)
+and [Six Strategies for Application Deployment](https://thenewstack.io/deployment-strategies/).
 
 - [recreate](recreate/README.md): terminate the old version and release the new
   one
@@ -27,8 +26,8 @@ nt-strategies/).
 
 ## Getting started
 
-These examples were created and tested on [Minikube](http://github.com/kubernet
-es/minikube) running with Kubernetes v1.8.0.
+These examples were created and tested on [Minikube](http://github.com/kubernetes/minikube)
+running with Kubernetes v1.8.0.
 
 ```
 $ minikube start --kubernetes-version v1.8.0
@@ -42,8 +41,8 @@ the progress and performance of a deployment.
 
 ### Install Helm
 
-To install Helm, follow the instructions provided on their [website](https://git
-hub.com/kubernetes/helm/releases).
+To install Helm, follow the instructions provided on their
+[website](https://github.com/kubernetes/helm/releases).
 
 ```
 $ helm init

@@ -16,8 +16,7 @@ if you want to shadow test the payment service you can end-up having customers
 paying twice for their order. In this case, you can solve it by creating a
 mocking service that replicates the response from the provider.
 
-Recently, Istio added support for [traffic mirroring/shadowing](https://istio.io
-/docs/reference/config/traffic-rules/routing-rules.html#mirror).
+**Recently, Istio added support for [traffic mirroring/shadowing](https://istio.io/docs/reference/config/traffic-rules/routing-rules.html#mirror).**
 
 In this example, we make use of [GoReplay](https://github.com/buger/goreplay)
 as sidecar container to capture and replay incoming traffic to version 2.
