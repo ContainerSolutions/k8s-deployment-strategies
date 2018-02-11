@@ -36,11 +36,11 @@ versions:
 
 ### Deploy Istio
 
-In this example, Istio 0.4.0 is used.
+In this example, Istio 0.5.0 is used.
 
 ```
 $ curl -L https://git.io/getLatestIstio | sh -
-$ cd istio-0.4.0
+$ cd istio-0.5.0
 $ export PATH=$PWD/bin:$PATH
 $ kubectl apply -f install/kubernetes/istio.yaml
 ```
@@ -51,8 +51,7 @@ Back to the a/b testing directory from this repo, deploy the service and
 ingress:
 
 ```
-$ kubectl apply -f ./service.yaml
-$ kubectl apply -f ./ingress.yaml
+$ kubectl apply -f ./service.yaml -f ./ingress.yaml
 ```
 
 Deploy the first application and use istioctl to inject a sidecar container to

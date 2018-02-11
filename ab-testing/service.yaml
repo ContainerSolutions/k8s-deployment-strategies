@@ -5,7 +5,6 @@ metadata:
   labels:
     app: my-app
 spec:
-  type: NodePort
   ports:
   - name: http
     port: 80
