@@ -4,13 +4,8 @@ metadata:
   name: my-app-v2
   labels:
     app: my-app
-    version: v2.0.0
 spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app: my-app
-      version: v2.0.0
+  replicas: 3
   template:
     metadata:
       labels:

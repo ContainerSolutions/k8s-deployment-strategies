@@ -18,10 +18,8 @@ if you want to shadow test the payment service you can end-up having customers
 paying twice for their order. In this case, you can solve it by creating a
 mocking service that replicates the response from the provider.
 
-**Recently, Istio added support for [traffic mirroring/shadowing](https://istio.io/docs/reference/config/traffic-rules/routing-rules.html#mirror).**
-
-In this example, we make use of [GoReplay](https://github.com/buger/goreplay)
-as sidecar container to capture and replay incoming traffic to version 2.
+In this example, we make use of [Istio](https://istio.io) to mirror traffic to
+the secondary deployment.
 
 ## Steps to follow
 
@@ -33,23 +31,44 @@ as sidecar container to capture and replay incoming traffic to version 2.
 
 ## In practice
 
-Deploy the first application:
+### Deploy Istio
+
+In this example, Istio 0.5.0 is used.
 
 ```
-$ kubectl apply -f app-v1.yaml
+$ curl -L https://git.io/getLatestIstio | sh -
+$ cd istio-0.5.0
+$ export PATH=$PWD/bin:$PATH
+$ kubectl apply -f install/kubernetes/istio.yaml
+```
+
+### Deploy the application
+
+Back to the a/b testing directory from this repo, deploy the service, ingress
+and Istio rules:
+
+```
+$ kubectl apply -f ./service.yaml -f ./ingress.yaml -f ./rules.yaml
+```
+
+Deploy the first application and use istioctl to inject a sidecar container to
+proxy all in and out requests:
+
+```
+$ kubectl apply -f <(istioctl kube-inject -f app-v1.yaml)
 ```
 
 Test if the deployment was successful:
 
 ```
-$ curl $(minikube service my-app --url)
+$ curl $(minikube service istio-ingress --url -n istio-system | head -n1)
 2018-01-28T00:22:04+01:00 - Host: host-1, Version: v1.0.0
 ```
 
 Then deploy the version 2 of the application:
 
 ```
-$ kubectl apply -f app-v2.yaml
+$ kubectl apply -f <(istioctl kube-inject -f app-v2.yaml)
 ```
 
 Throw few requests to the service:
@@ -63,11 +82,12 @@ the incoming request of version 1 being mirrored to version 2:
 
 ```
 $ kubectl logs deploy/my-app-v1 -c my-app
-$ kubectl logs deploy/my-app-v2
+$ kubectl logs deploy/my-app-v2 -c my-app
 ```
 
 ### Cleanup
 
 ```
 $ kubectl delete all -l app=my-app
+$ kubectl delete -f <PATH-TO-ISTIO>/install/kubernetes/istio.yaml
 ```
