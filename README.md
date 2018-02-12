@@ -24,6 +24,9 @@ and [Six Strategies for Application Deployment](https://thenewstack.io/deploymen
   Incoming traffic is mirrored to the new version and doesn't impact the
   response.
 
+![deployment strategy decision diagram](decision-diagram.png)
+
+
 ## Getting started
 
 These examples were created and tested on [Minikube](http://github.com/kubernetes/minikube)
