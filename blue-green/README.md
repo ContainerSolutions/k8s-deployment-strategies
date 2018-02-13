@@ -14,5 +14,5 @@ traffic is switched from version A to version B at the load balancer level.
 **You can apply the blue/green deployment technique for a single service or
 multiple services using an Ingress controller:**
 
-- [multiple services using Ingress](multiple-services/README.md)
-- [single service](single-service/README.md)
+- [multiple services using Ingress](multiple-services/)
+- [single service](single-service/)

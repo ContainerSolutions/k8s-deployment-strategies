@@ -8,20 +8,19 @@ Before experimenting, checkout the blog post about
 [Kubernetes deployment strategies](https://container-solutions.com/kubernetes-deployment-strategies/)
 and [Six Strategies for Application Deployment](https://thenewstack.io/deployment-strategies/).
 
-- [recreate](recreate/README.md): terminate the old version and release the new
-  one
-- [ramped](ramped/README.md): release a new version on a rolling update fashion,
-  one after the other
-- [blue/green](blue-green/README.md): release a new version alongside the old
-  version then switch traffic
-- [canary](canary/README.md): release a new version to a subset of users, then
-  proceed to a full rollout
-- [a/b testing](ab-testing/README.md): release a new version to a subset of
-  users in a precise way (HTTP headers, cookie, weight, etc.). This doesn’t come
-  out of the box with Kubernetes, it imply extra work to setup a smarter
+- [recreate](recreate/): terminate the old version and release the new one
+- [ramped](ramped/): release a new version on a rolling update fashion, one
+  after the other
+- [blue/green](blue-green/): release a new version alongside the old version
+  then switch traffic
+- [canary](canary/): release a new version to a subset of users, then proceed
+  to a full rollout
+- [a/b testing](ab-testing/): release a new version to a subset of users in a
+  precise way (HTTP headers, cookie, weight, etc.). This doesn’t come out of the
+  box with Kubernetes, it imply extra work to setup a smarter
   loadbalancing system (Istio, Linkerd, Traeffik, custom nginx/haproxy, etc).
-- [shadow](shadow/README.md): release a new version alongside the old version.
-  Incoming traffic is mirrored to the new version and doesn't impact the
+- [shadow](shadow/): release a new version alongside the old version. Incoming
+  traffic is mirrored to the new version and doesn't impact the
   response.
 
 ![deployment strategy decision diagram](decision-diagram.png)
