@@ -33,11 +33,11 @@ the secondary deployment.
 
 ### Deploy Istio
 
-In this example, Istio 0.5.0 is used.
+In this example, Istio 0.5.1 is used.
 
 ```
 $ curl -L https://git.io/getLatestIstio | sh -
-$ cd istio-0.5.0
+$ cd istio-0.5.1
 $ export PATH=$PWD/bin:$PATH
 $ kubectl apply -f install/kubernetes/istio.yaml
 ```

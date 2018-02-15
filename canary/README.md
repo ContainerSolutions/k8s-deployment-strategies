@@ -13,6 +13,11 @@ This technique is mostly used when the tests are lacking or not reliable or if
 there is little confidence about the stability of the new release on the
 platform.
 
+*In the following example we apply the poor man's canary using Kubernetes native
+features (replicas). If you want a finer grained control over traffic shifting,
+check the [a/b testing example](../ab-testing) which contain an example of
+traffic shifting using [Isio](https://istio.io)).*
+
 ## Steps to follow
 
 1. 10 replicas of version 1 is serving traffic
