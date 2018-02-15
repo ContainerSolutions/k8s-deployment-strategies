@@ -4,8 +4,8 @@ Kubernetes deployment strategies
 > In Kubernetes there is few different way to release an application, you have
 to carefully choose the right strategy to make your infrastructure relisiant.
 
-Before experimenting, checkout the blog post about
-[Kubernetes deployment strategies](https://container-solutions.com/kubernetes-deployment-strategies/)
+Before experimenting, checkout the [CNCF prensentation](https://www.slideshare.net/EtienneTremel/kubernetes-deployment-strategies-cncf-webinar)
+to the blog post about [Kubernetes deployment strategies](https://container-solutions.com/kubernetes-deployment-strategies/)
 and [Six Strategies for Application Deployment](https://thenewstack.io/deployment-strategies/).
 
 - [recreate](recreate/): terminate the old version and release the new one
