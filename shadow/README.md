@@ -33,11 +33,11 @@ the secondary deployment.
 
 ### Deploy Istio
 
-In this example, Istio 0.5.1 is used.
+In this example, Istio 0.6.0 is used.
 
 ```
 $ curl -L https://git.io/getLatestIstio | sh -
-$ cd istio-0.5.1
+$ cd istio-0.6.0
 $ export PATH=$PWD/bin:$PATH
 $ kubectl apply -f install/kubernetes/istio.yaml
 ```
@@ -61,7 +61,7 @@ $ kubectl apply -f <(istioctl kube-inject -f app-v1.yaml)
 Test if the deployment was successful:
 
 ```
-$ curl $(minikube service istio-ingress --url -n istio-system | head -n1)
+$ curl $(kubectl get svc -o jsonpath="{.status.loadBalancer.ingress[0].ip}" istio-ingress -n istio-system)
 2018-01-28T00:22:04+01:00 - Host: host-1, Version: v1.0.0
 ```
 
@@ -74,7 +74,7 @@ $ kubectl apply -f <(istioctl kube-inject -f app-v2.yaml)
 Throw few requests to the service:
 
 ```
-$ curl $(minikube service my-app --url)
+$ curl $(kubectl get svc -o jsonpath="{.status.loadBalancer.ingress[0].ip}" istio-ingress -n istio-system)
 ```
 
 If you check the logs from the second deployment, you should be able to see all

@@ -14,25 +14,22 @@ the blue/green deployment strategy.
 
 ## In practice
 
-###  Deploy Traefik with Helm
-
-Install the latest version of [Helm](https://docs.helm.sh/using_helm/#installing-helm), then install Traefik:
+Deploy version 1 of application a and b and an ingress:
 
 ```
-$ helm install --name=traefik --version=1.17.1 stable/traefik
+$ kubectl apply -f app-a-v1.yaml -f app-b-v1.yaml -f ingress-v1.yaml
 ```
 
-Deploy version 1 of application a and b:
+Wait until the ingress IP get created:
 
 ```
-$ kubectl apply -f app-a-v1.yaml -f app-b-v1.yaml
-$ kubectl apply -f ingress-v1.yaml
+$ kubectl get ing my-app
 ```
 
 Test if the deployment was successful:
 
 ```
-$ ingress=$(minikube service traefik-traefik --url | head -n1)
+$ ingress=$(kubectl get ing my-app -o jsonpath="{.status.loadBalancer.ingress[0].ip}")
 $ curl $ingress -H 'Host: a.domain.com'
 Host: my-app-a-v1-66fb8d6f99-hs8jr, Version: v1.0.0
 
@@ -63,7 +60,7 @@ $ kubectl apply -f ingress-v2.yaml
 Test if the deployment was successful:
 
 ```
-$ ingress=$(minikube service traefik-traefik --url | head -n1)
+$ ingress=$(kubectl get ing my-app -o jsonpath="{.status.loadBalancer.ingress[0].ip}")
 $ curl $ingress -H 'Host: a.domain.com'
 Host: my-app-a-v2-6b58d47c5f-nmzds, Version: v2.0.0
 
@@ -87,5 +84,4 @@ $ kubectl delete -f ./app-a-v1.yaml -f ./app-b-v1.yaml
 
 ```
 $ kubectl delete all -l app=my-app
-$ helm del --purge traefik
 ```

@@ -36,21 +36,27 @@ Deploy the first application:
 $ kubectl apply -f app-v1.yaml
 ```
 
+Wait until the service IP is available:
+
+```
+$ kubectl get svc my-app
+```
+
 Test if the deployment was successful:
 
 ```
-$ curl $(minikube service my-app --url)
+$ curl $(kubectl get svc -o jsonpath="{.status.loadBalancer.ingress[0].ip}" my-app)
 2018-01-28T00:22:04+01:00 - Host: host-1, Version: v1.0.0
 ```
 
-To see the deployment in action, open a new terminal and run a watch command. It
-will show you a better view on the progress:
+Before deploying the new release, open a new terminal and run the following
+command To see the deployment in action:
 
 ```
 $ watch kubectl get po
 ```
 
-Then deploy the version 2 of the application:
+Then, in the previous terminal, deploy version 2 of the application:
 
 ```
 $ kubectl apply -f app-v2.yaml
@@ -61,7 +67,7 @@ Only one pod with the new version should be running.
 You can test if the second deployment was successful:
 
 ```
-$ service=$(minikube service my-app --url)
+$ service=$(kubectl get svc -o jsonpath="{.status.loadBalancer.ingress[0].ip}" my-app)
 $ while sleep 0.1; do curl "$service"; done
 ```
 

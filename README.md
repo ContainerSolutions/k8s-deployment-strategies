@@ -28,13 +28,7 @@ and [Six Strategies for Application Deployment](https://thenewstack.io/deploymen
 
 ## Getting started
 
-These examples were created and tested on [Minikube](http://github.com/kubernetes/minikube)
-running with Kubernetes v1.8.0.
-
-```
-$ minikube start --kubernetes-version v1.8.0
-```
-
+These examples were created and tested on GKE running with Kubernetes v1.8.8.
 
 ## Visualizing using Prometheus and Grafana
 
@@ -47,7 +41,12 @@ To install Helm, follow the instructions provided on their
 [website](https://github.com/kubernetes/helm/releases).
 
 ```
-$ helm init
+$ kubectl create serviceaccount tiller --namespace kube-system
+$ kubectl create clusterrolebinding tiller \
+      --clusterrole=cluster-admin \
+      --serviceaccount=kube-system:tiller
+$ helm init --upgrade --service-account tiller
+
 ```
 
 ### Install Prometheus
@@ -68,16 +67,17 @@ $ helm install \
    --version=0.5.7 \
    --set=server.adminUser=admin \
    --set=server.adminPassword=admin \
-   --set=server.service.type=NodePort \
+   --set=server.service.type=LoadBalancer \
    stable/grafana
 ```
 
 ### Setup Grafana
 
-Now that Prometheus and Grafana are up and running, you can access Grafana:
+Now that Prometheus and Grafana are up and running, you can access Grafana by
+accessing its public IP:
 
 ```
-$ minikube service grafana-grafana
+$ kubectl get svc -o jsonpath="{.status.loadBalancer.ingress[0].ip}" grafana-grafana
 ```
 
 To login, username: `admin`, password: `admin`.

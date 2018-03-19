@@ -5,7 +5,7 @@ metadata:
   labels:
     app: my-app
 spec:
-  type: NodePort
+  type: LoadBalancer
   ports:
   - name: http
     port: 80

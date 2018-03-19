@@ -36,11 +36,11 @@ versions:
 
 ### Deploy Istio
 
-In this example, Istio 0.5.1 is used.
+In this example, Istio 0.6.0 is used.
 
 ```
 $ curl -L https://git.io/getLatestIstio | sh -
-$ cd istio-0.5.1
+$ cd istio-0.6.0
 $ export PATH=$PWD/bin:$PATH
 $ kubectl apply -f install/kubernetes/istio.yaml
 ```
@@ -64,7 +64,7 @@ $ kubectl apply -f <(istioctl kube-inject -f app-v1.yaml)
 Test if the deployment was successful:
 
 ```
-$ curl $(minikube service istio-ingress --url -n istio-system | head -n1)
+$ curl $(kubectl get svc -o jsonpath="{.status.loadBalancer.ingress[0].ip}" istio-ingress -n istio-system)
 2018-01-28T00:22:04+01:00 - Host: host-1, Version: v1.0.0
 ```
 
@@ -85,7 +85,7 @@ $ kubectl apply -f ./rules-weight.yaml
 You can now test if the traffic is correctly splitted amongst both versions:
 
 ```
-$ service=$(minikube service istio-ingress --url -n istio-system | head -n1)
+$ service=$(kubectl get svc -o jsonpath="{.status.loadBalancer.ingress[0].ip}" istio-ingress -n istio-system)
 $ while sleep 0.1; do curl "$service"; done
 ```
 
@@ -116,7 +116,7 @@ $ kubectl apply -f ./rules-match.yaml
 Test if the traffic is hitting the correct set of instances:
 
 ```
-$ service=$(minikube service istio-ingress --url -n istio-system | head -n1)
+$ service=$(kubectl get svc -o jsonpath="{.status.loadBalancer.ingress[0].ip}" istio-ingress -n istio-system)
 $ curl $service -H 'X-API-Version: v1.0.0'
 Host: my-app-v1-5869685788-j4slc, Version: v1.0.0
 
