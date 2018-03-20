@@ -50,7 +50,7 @@ will show you a better view on the progress:
 $ watch kubectl get po
 ```
 
-Then deploy the version 2 of the application:
+Then deploy version 2 of the application:
 
 ```
 $ kubectl apply -f app-v2.yaml

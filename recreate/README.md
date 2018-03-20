@@ -32,13 +32,14 @@ $ curl $(minikube service my-app --url)
 2018-01-28T00:22:04+01:00 - Host: host-1, Version: v1.0.0
 ```
 
-To see the deployment in action, open a new terminal and run the following command:
+To see the deployment in action, open a new terminal and run the following
+command:
 
 ```
 $ watch kubectl get po
 ```
 
-Then deploy the version 2 of the application:
+Then deploy version 2 of the application:
 
 ```
 $ kubectl apply -f app-v2.yaml
