@@ -51,6 +51,13 @@ spec:
         env:
         - name: VERSION
           value: v2.0.0
+        resources:
+          limits:
+            cpu: 100m
+            memory: 100Mi
+          requests:
+            cpu: 10m
+            memory: 50Mi
         livenessProbe:
           httpGet:
             path: /live

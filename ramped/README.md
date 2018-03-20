@@ -55,7 +55,7 @@ command To see the deployment in action:
 $ watch kubectl get po
 ```
 
-Then, in the previous terminal, deploy version 2 of the application:
+Then, from the previous terminal, deploy version 2 of the application:
 
 ```
 $ kubectl apply -f app-v2.yaml

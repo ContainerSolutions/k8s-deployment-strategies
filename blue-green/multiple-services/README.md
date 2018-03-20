@@ -26,6 +26,9 @@ Wait until the ingress IP get created:
 $ kubectl get ing my-app
 ```
 
+> It can take some time (5minutes) to get the GKE LoadBalancer to send traffic
+to the backend, so be patient :)
+
 Test if the deployment was successful:
 
 ```

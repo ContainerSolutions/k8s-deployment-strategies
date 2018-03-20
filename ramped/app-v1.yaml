@@ -43,6 +43,13 @@ spec:
           containerPort: 8086
         - name: metrics
           containerPort: 9101
+        resources:
+          limits:
+            cpu: 100m
+            memory: 100Mi
+          requests:
+            cpu: 10m
+            memory: 50Mi
         env:
         - name: VERSION
           value: v1.0.0

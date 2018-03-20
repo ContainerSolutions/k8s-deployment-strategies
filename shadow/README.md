@@ -42,6 +42,9 @@ $ export PATH=$PWD/bin:$PATH
 $ kubectl apply -f install/kubernetes/istio.yaml
 ```
 
+> It can take some time (5minutes) to get the GKE LoadBalancer to send traffic
+to the backend, so be patient :)
+
 ### Deploy the application
 
 Back to the a/b testing directory from this repo, deploy the service, ingress

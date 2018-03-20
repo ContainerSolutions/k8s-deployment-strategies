@@ -55,7 +55,7 @@ Test the second deployment progress:
 
 ```
 $ service=$(kubectl get svc -o jsonpath="{.status.loadBalancer.ingress[0].ip}" my-app)
-$ while sleep 0.1; do curl "$service"; done
+$ while sleep 0.1; do curl "$service" --connect-timeout 0; done
 ```
 
 ### Cleanup
