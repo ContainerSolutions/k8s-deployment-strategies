@@ -25,6 +25,7 @@ Before experimenting, checkout the following resources:
 - [CNCF prensentation](https://www.slideshare.net/EtienneTremel/kubernetes-deployment-strategies-cncf-webinar)
 - [Kubernetes deployment strategies](https://container-solutions.com/kubernetes-deployment-strategies/)
 - [Six Strategies for Application Deployment](https://thenewstack.io/deployment-strategies/).
+- [Canary deployment using Istio and Helm](https://github.com/etiennetremel/istio-cross-namespace-canary-release-demo)
 
 
 ## Getting started
