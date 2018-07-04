@@ -1,0 +1,26 @@
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: my-app
+  labels:
+    app: my-app
+spec:
+  hosts:
+    - my-app.local
+  gateways:
+    - my-app
+  http:
+    - route:
+        - destination:
+            host: my-app-v1
+      match:
+        - headers:
+            x-api-version:
+              exact: v1.0.0
+    - route:
+        - destination:
+            host: my-app-v2
+      match:
+        - headers:
+            x-api-version:
+              exact: v2.0.0

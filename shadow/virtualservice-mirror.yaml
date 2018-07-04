@@ -1,0 +1,18 @@
+# Mirror traffic to v2.0.0
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: my-app
+  labels:
+    app: my-app
+spec:
+  hosts:
+    - my-app.local
+  gateways:
+    - my-app
+  http:
+    - route:
+        - destination:
+            host: my-app-v1
+      mirror:
+        host: my-app-v2

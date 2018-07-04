@@ -23,62 +23,78 @@ the secondary deployment.
 
 ## Steps to follow
 
-1. version is serving traffic
+1. version 1 is serving HTTP traffic using Istio
 1. deploy version 2
+1. mirror version 1 incoming traffic to version 2
 1. wait enought time to confirm that version 2 is stable and not throwing
    unexpected errors
 1. switch incoming traffic from version 1 to version 2
 
 ## In practice
 
+Before starting, it is recommended to know the basic concept of the
+[Istio routing API](https://istio.io/blog/2018/v1alpha3-routing/).
+
 ### Deploy Istio
 
-In this example, Istio 0.6.0 is used.
+In this example, Istio 0.8.0 is used.
 
 ```
 $ curl -L https://git.io/getLatestIstio | sh -
-$ cd istio-0.6.0
+$ cd istio-0.8.0
 $ export PATH=$PWD/bin:$PATH
-$ kubectl apply -f install/kubernetes/istio.yaml
+$ kubectl apply -f install/kubernetes/istio-demo.yaml
 ```
 
-### Deploy the application
-
-Back to the a/b testing directory from this repo, deploy the service, ingress
-and Istio rules:
+It might take a while to download images from the Docker registry, you can watch
+the progress using the command below and when all containers are showing with
+status "Ready" or "Completed", then you can go to the next step.
 
 ```
-$ kubectl apply -f ./service.yaml -f ./ingress.yaml -f ./rules.yaml
+$ watch kubectl get pods -n istio-system
 ```
 
-Deploy the first application and use istioctl to inject a sidecar container to
-proxy all in and out requests:
+### Deploy both applications
+
+Back to the shadow directory from this repo, deploy both applications using the
+istioctl command to inject the Istio sidecar container which is used to proxy
+requests:
 
 ```
 $ kubectl apply -f <(istioctl kube-inject -f app-v1.yaml)
-```
-
-Test if the deployment was successful:
-
-```
-$ curl $(minikube service istio-ingress --url -n istio-system | head -n1)
-2018-01-28T00:22:04+01:00 - Host: host-1, Version: v1.0.0
-```
-
-Then deploy the version 2 of the application:
-
-```
 $ kubectl apply -f <(istioctl kube-inject -f app-v2.yaml)
 ```
 
-Throw few requests to the service:
+Expose both services via the Istio Gateway and create a VirtualService to match
+requests to the my-app-v1 service:
 
 ```
-$ curl $(minikube service my-app --url)
+$ kubectl apply -f ./gateway.yaml -f ./virtualservice.yaml
 ```
 
-If you check the logs from the second deployment, you should be able to see all
-the incoming request of version 1 being mirrored to version 2:
+At this point, if you make a request against the Istio ingress gateway with the
+given host `my-app.local`, you should only see version 1 responding:
+
+```
+$ curl $(minikube service istio-ingressgateway -n istio-system --url | head -n1) -H 'Host: my-app.local'
+Host: my-app-v1-6d577d97b4-lxn22, Version: v1.0.0
+```
+
+### Enable traffic mirroring
+
+```
+$ kubectl apply -f ./virtualservice-mirror.yaml
+```
+
+Throw few requests to the service, only version 1 should be seen in the
+response:
+
+```
+$ curl $(minikube service istio-ingressgateway -n istio-system --url | head -n1) -H 'Host: my-app.local'
+```
+
+If you check the logs from both pods, you should see all version 1 incoming
+requests being mirrored to version 2:
 
 ```
 $ kubectl logs deploy/my-app-v1 -c my-app
@@ -88,6 +104,7 @@ $ kubectl logs deploy/my-app-v2 -c my-app
 ### Cleanup
 
 ```
-$ kubectl delete all -l app=my-app
-$ kubectl delete -f <PATH-TO-ISTIO>/install/kubernetes/istio.yaml
+$ kubectl delete gateway/my-app virtualservice/my-app
+$ kubectl delete -f ./app-v1.yaml -f ./app-v2.yaml
+$ kubectl delete -f <PATH-TO-ISTIO>/install/kubernetes/istio-demo.yaml
 ```
