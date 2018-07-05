@@ -7,7 +7,7 @@ A/B testing using Istio
 
 A/B testing deployments consists of routing a subset of users to a new
 functionality under specific conditions. It is usually a technique for making
-business decisions based on statistics, rather than a deployment strategy.
+business decisions based on statistics rather than a deployment strategy.
 However, it is related and can be implemented by adding extra functionality to a
 canary deployment so we will briefly discuss it here.
 
@@ -26,107 +26,109 @@ versions:
 
 ## Steps to follow
 
-1. version 1 with Istio sidecar container is serving HTTP traffic
-1. create RouteRule via Istio, 100% version 1, 0% version 2
+1. version 1 is serving HTTP traffic using Istio
 1. deploy version 2
 1. wait until all instances are ready
-1. update Istio RouteRule with 90% version 1, 0% version 2
+1. update Istio VirtualService with 90% traffic targetting version 1 and 10%
+   traffic targetting version 2
 
 ## In practice
 
+Before starting, it is recommended to know the basic concept of the
+[Istio routing API](https://istio.io/blog/2018/v1alpha3-routing/).
+
 ### Deploy Istio
 
-In this example, Istio 0.6.0 is used.
+In this example, Istio 0.8.0 is used.
 
 ```
 $ curl -L https://git.io/getLatestIstio | sh -
-$ cd istio-0.6.0
+$ cd istio-0.8.0
 $ export PATH=$PWD/bin:$PATH
-$ kubectl apply -f install/kubernetes/istio.yaml
+$ kubectl apply -f install/kubernetes/istio-demo.yaml
 ```
 
-### Deploy the application
-
-Back to the a/b testing directory from this repo, deploy the service and
-ingress:
+It might take a while to download images from the Docker registry, you can watch
+the progress using the command below and when all containers are showing with
+status "Ready" or "Completed", then you can go to the next step.
 
 ```
-$ kubectl apply -f ./service.yaml -f ./ingress.yaml
+$ watch kubectl get pods -n istio-system
 ```
 
-Deploy the first application and use istioctl to inject a sidecar container to
-proxy all in and out requests:
+### Deploy both applications
+
+Back to the a/b testing directory from this repo, deploy both applications using
+the istioctl command to inject the Istio sidecar container which is used to
+proxy requests:
 
 ```
 $ kubectl apply -f <(istioctl kube-inject -f app-v1.yaml)
-```
-
-Test if the deployment was successful:
-
-```
-$ curl $(minikube service istio-ingress --url -n istio-system | head -n1)
-2018-01-28T00:22:04+01:00 - Host: host-1, Version: v1.0.0
-```
-
-Then deploy version 2 of the application:
-
-```
 $ kubectl apply -f <(istioctl kube-inject -f app-v2.yaml)
+```
+
+Expose both services via the Istio Gateway and create a VirtualService to match
+requests to the my-app-v1 service:
+
+```
+$ kubectl apply -f ./gateway.yaml -f ./virtualservice.yaml
+```
+
+At this point, if you make a request against the Istio ingress gateway with the
+given host `my-app.local`, you should only see version 1 responding:
+
+```
+$ curl $(minikube service istio-ingressgateway -n istio-system --url | head -n1) -H 'Host: my-app.local'
+Host: my-app-v1-6d577d97b4-lxn22, Version: v1.0.0
 ```
 
 ### Shift traffic based on weight
 
-Apply the load balancing rule:
+Apply the Istio VirtualService rule based on weight:
 
 ```
-$ kubectl apply -f ./rules-weight.yaml
+$ kubectl apply -f ./virtualservice-weight.yaml
 ```
 
 You can now test if the traffic is correctly splitted amongst both versions:
 
 ```
-$ service=$(minikube service istio-ingress --url -n istio-system | head -n1)
-$ while sleep 0.1; do curl "$service"; done
+$ service=$(minikube service istio-ingressgateway -n istio-system --url | head -n1)
+$ while sleep 0.1; do curl "$service" -H 'Host: my-app.local'; done
 ```
 
-You should see 1 request on 10 ending up in the version 2.
+You should approximately see 1 request on 10 ending up in the version 2.
 
-In the rules.yaml file, you can edit the weight of each route and apply the
-changes as follow:
+In the `./virtualservice-weight.yaml` file, you can edit the weight of each
+destination and apply the updated rule to Minikube:
 
 ```
-$ kubectl apply -f ./rules-weight.yaml
+$ kubectl apply -f ./virtualservice-weight.yaml
 ```
 
 ### Shift traffic based on headers
 
-If you have been following the steps above, you need to remove the previously
-create RouteRule:
+Apply the Istio VirtualService rule based on headers:
 
 ```
-$ kubectl delete routerule my-app
+$ kubectl apply -f ./virtualservice-match.yaml
 ```
 
-Then apply the matching rule:
+You can now test if the traffic is hitting the correct set of instances:
 
 ```
-$ kubectl apply -f ./rules-match.yaml
-```
+$ service=$(minikube service istio-ingressgateway -n istio-system --url | head -n1)
+$ curl $service -H 'Host: my-app.local' -H 'X-API-Version: v1.0.0'
+Host: my-app-v1-6d577d97b4-s4h6k, Version: v1.0.0
 
-Test if the traffic is hitting the correct set of instances:
-
-```
-$ service=$(minikube service istio-ingress --url -n istio-system | head -n1)
-$ curl $service -H 'X-API-Version: v1.0.0'
-Host: my-app-v1-5869685788-j4slc, Version: v1.0.0
-
-$ curl $service -H 'X-API-Version: v2.0.0'
-Host: my-app-v2-5cf5f5bc7d-kcjdn, Version: v2.0.0
+$ curl $service -H 'Host: my-app.local' -H 'X-API-Version: v2.0.0'
+Host: my-app-v2-65f9fdbb88-jtctt, Version: v2.0.0
 ```
 
 ### Cleanup
 
 ```
-$ kubectl delete all -l app=my-app
-$ kubectl delete -f <PATH-TO-ISTIO>/install/kubernetes/istio.yaml
+$ kubectl delete gateway/my-app virtualservice/my-app
+$ kubectl delete -f ./app-v1.yaml -f ./app-v2.yaml
+$ kubectl delete -f <PATH-TO-ISTIO>/install/kubernetes/istio-demo.yaml
 ```

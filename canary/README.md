@@ -18,6 +18,9 @@ features (replicas). If you want a finer grained control over traffic shifting,
 check the [a/b testing example](../ab-testing) which contain an example of
 traffic shifting using [Isio](https://istio.io)).*
 
+*If you want to use Helm to deploy applications, the following repository
+demonstrate how to make a [canary deployment using Istio and Helm](https://github.com/etiennetremel/istio-cross-namespace-canary-release-demo).*
+
 ## Steps to follow
 
 1. 10 replicas of version 1 is serving traffic

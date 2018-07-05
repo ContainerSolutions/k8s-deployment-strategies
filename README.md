@@ -4,10 +4,6 @@ Kubernetes deployment strategies
 > In Kubernetes there is few different way to release an application, you have
 to carefully choose the right strategy to make your infrastructure relisiant.
 
-Before experimenting, checkout the [CNCF prensentation](https://www.slideshare.net/EtienneTremel/kubernetes-deployment-strategies-cncf-webinar)
-to the blog post about [Kubernetes deployment strategies](https://container-solutions.com/kubernetes-deployment-strategies/)
-and [Six Strategies for Application Deployment](https://thenewstack.io/deployment-strategies/).
-
 - [recreate](recreate/): terminate the old version and release the new one
 - [ramped](ramped/): release a new version on a rolling update fashion, one
   after the other
@@ -24,6 +20,12 @@ and [Six Strategies for Application Deployment](https://thenewstack.io/deploymen
   response.
 
 ![deployment strategy decision diagram](decision-diagram.png)
+
+Before experimenting, checkout the following resources:
+- [CNCF prensentation](https://www.slideshare.net/EtienneTremel/kubernetes-deployment-strategies-cncf-webinar)
+- [Kubernetes deployment strategies](https://container-solutions.com/kubernetes-deployment-strategies/)
+- [Six Strategies for Application Deployment](https://thenewstack.io/deployment-strategies/).
+- [Canary deployment using Istio and Helm](https://github.com/etiennetremel/istio-cross-namespace-canary-release-demo)
 
 
 ## Getting started
