@@ -37,21 +37,15 @@ Before starting, it is recommended to know the basic concept of the
 
 ### Deploy Istio
 
-In this example, Istio 0.8.0 is used.
+In this example, Istio 1.0.0 is used. To install Istio, follow the
+[instructions](https://istio.io/docs/setup/kubernetes/helm-install/) from the
+Istio website.
+
+Automatic sidecar injection should be enabled by default. Then annotate the
+default namespace to enable it.
 
 ```
-$ curl -L https://git.io/getLatestIstio | sh -
-$ cd istio-0.8.0
-$ export PATH=$PWD/bin:$PATH
-$ kubectl apply -f install/kubernetes/istio-demo.yaml
-```
-
-It might take a while to download images from the Docker registry, you can watch
-the progress using the command below and when all containers are showing with
-status "Ready" or "Completed", then you can go to the next step.
-
-```
-$ watch kubectl get pods -n istio-system
+$ kubectl label namespace default istio-injection=enabled
 ```
 
 ### Deploy both applications
@@ -61,8 +55,7 @@ istioctl command to inject the Istio sidecar container which is used to proxy
 requests:
 
 ```
-$ kubectl apply -f <(istioctl kube-inject -f app-v1.yaml)
-$ kubectl apply -f <(istioctl kube-inject -f app-v2.yaml)
+$ kubectl apply -f app-v1.yaml -f app-v2.yaml
 ```
 
 Expose both services via the Istio Gateway and create a VirtualService to match
