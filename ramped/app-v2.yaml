@@ -46,8 +46,6 @@ spec:
           containerPort: 8080
         - name: probe
           containerPort: 8086
-        - name: metrics
-          containerPort: 9101
         env:
         - name: VERSION
           value: v2.0.0

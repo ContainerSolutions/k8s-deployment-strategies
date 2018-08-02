@@ -21,6 +21,10 @@ metadata:
     app: my-app
 spec:
   replicas: 1
+  selector:
+    matchLabels:
+      app: my-app
+      version: v2.0.0
   template:
     metadata:
       labels:
@@ -38,8 +42,6 @@ spec:
           containerPort: 8080
         - name: probe
           containerPort: 8086
-        - name: metrics
-          containerPort: 9101
         env:
         - name: VERSION
           value: v2.0.0
