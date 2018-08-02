@@ -31,10 +31,10 @@ Before experimenting, checkout the following resources:
 ## Getting started
 
 These examples were created and tested on [Minikube](http://github.com/kubernetes/minikube)
-running with Kubernetes v1.8.0.
+running with Kubernetes v1.10.0.
 
 ```
-$ minikube start --kubernetes-version v1.8.0
+$ minikube start --kubernetes-version v1.10.0 --memory 8192 --cpus 2
 ```
 
 
@@ -56,9 +56,9 @@ $ helm init
 
 ```
 $ helm install \
+    --namespace=monitoring \
     --name=prometheus \
-    --version=5.0.1 \
-    --set=serverFiles."prometheus\.yml".global.scrape_interval=3s \
+    --version=7.0.0 \
     stable/prometheus
 ```
 
@@ -66,12 +66,13 @@ $ helm install \
 
 ```
 $ helm install \
-   --name=grafana \
-   --version=0.5.7 \
-   --set=server.adminUser=admin \
-   --set=server.adminPassword=admin \
-   --set=server.service.type=NodePort \
-   stable/grafana
+    --namespace=monitoring \
+    --name=grafana \
+    --version=1.12.0 \
+    --set=adminUser=admin \
+    --set=adminPassword=admin \
+    --set=service.type=NodePort \
+    stable/grafana
 ```
 
 ### Setup Grafana
@@ -79,7 +80,7 @@ $ helm install \
 Now that Prometheus and Grafana are up and running, you can access Grafana:
 
 ```
-$ minikube service grafana-grafana
+$ minikube service grafana
 ```
 
 To login, username: `admin`, password: `admin`.
@@ -89,8 +90,8 @@ Then you need to connect Grafana to Prometheus, to do so, add a DataSource:
 ```
 Name: prometheus
 Type: Prometheus
-Url: http://prometheus-prometheus-server
-Access: Proxy
+Url: http://prometheus-server
+Access: Server
 ```
 
 Create a dashboard with a Graph. Use the following query:
