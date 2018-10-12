@@ -16,7 +16,7 @@ platform.
 *In the following example we apply the poor man's canary using Kubernetes native
 features (replicas). If you want a finer grained control over traffic shifting,
 check the [a/b testing example](../ab-testing) which contain an example of
-traffic shifting using [Isio](https://istio.io)).*
+traffic shifting using [Istio](https://istio.io)).*
 
 *If you want to use Helm to deploy applications, the following repository
 demonstrate how to make a [canary deployment using Istio and Helm](https://github.com/etiennetremel/istio-cross-namespace-canary-release-demo).*
