@@ -27,7 +27,7 @@ Before experimenting, checkout the following resources:
 - [Kubernetes deployment strategies](https://container-solutions.com/kubernetes-deployment-strategies/)
 - [Six Strategies for Application Deployment](https://thenewstack.io/deployment-strategies/).
 - [Canary deployment using Istio and Helm](https://github.com/etiennetremel/istio-cross-namespace-canary-release-demo)
-
+- [Automated rollback of Helm releases based on logs or metrics](https://container-solutions.com/automated-rollback-helm-releases-based-logs-metrics/)
 
 ## Getting started
 
