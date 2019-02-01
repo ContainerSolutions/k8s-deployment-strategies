@@ -2,7 +2,7 @@ Canary deployment using the nginx-ingress controller
 ====================================================
 
 > In the following example, we shift traffic between 2 applications using the
-(canary annotations of the Nginx ingress
+[canary annotations of the Nginx ingress
 controller](https://kubernetes.github.io/ingress-nginx/user-guide/nginx-configuration/annotations/#canary).
 
 ## Steps to follow

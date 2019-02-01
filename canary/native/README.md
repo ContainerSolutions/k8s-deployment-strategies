@@ -3,9 +3,9 @@ Canary deployment using Kubernetes native functionnalities
 
 > In the following example we apply the poor man's canary using Kubernetes
 native features (replicas). If you want a finer grained control over traffic
-shifting, check the [nginx-ingress](../nginx-ingress) example which use Nginx
-to split traffic or the [a/b testing](../../ab-testing) example which shift
-traffic using [Istio](https://istio.io).
+shifting, check the [nginx-ingress](../nginx-ingress) example which use
+[Nginx](http://nginx.org/) to split traffic or the [a/b testing](../../ab-testing)
+example which shift traffic using [Istio](https://istio.io).
 
 ## Steps to follow
 
