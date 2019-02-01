@@ -19,41 +19,28 @@ of the application.
 
 ## In practice
 
-Deploy the first application:
-
 ```
+# Deploy the first application
 $ kubectl apply -f app-v1.yaml
-```
 
-Test if the deployment was successful:
-
-```
+# Test if the deployment was successful
 $ curl $(minikube service my-app --url)
 2018-01-28T00:22:04+01:00 - Host: host-1, Version: v1.0.0
-```
 
-To see the deployment in action, open a new terminal and run the following
-command:
-
-```
+# To see the deployment in action, open a new terminal and run the following
+# command
 $ watch kubectl get po
-```
 
-Then deploy version 2 of the application:
-
-```
+# Then deploy version 2 of the application
 $ kubectl apply -f app-v2.yaml
-```
 
-Test the second deployment progress:
-
-```
+# Test the second deployment progress
 $ service=$(minikube service my-app --url)
 $ while sleep 0.1; do curl "$service"; done
 ```
 
 ### Cleanup
 
-```
+```bash
 $ kubectl delete all -l app=my-app
 ```

@@ -29,60 +29,39 @@ following parameters to increase the deployment time:
 
 ## In practice
 
-Deploy the first application:
-
-```
+```bash
+# Deploy the first application
 $ kubectl apply -f app-v1.yaml
-```
 
-Test if the deployment was successful:
-
-```
+# Test if the deployment was successful
 $ curl $(minikube service my-app --url)
 2018-01-28T00:22:04+01:00 - Host: host-1, Version: v1.0.0
-```
 
-To see the deployment in action, open a new terminal and run the following
-command:
-
-```
+# To see the deployment in action, open a new terminal and run the following
+# command
 $ watch kubectl get po
-```
 
-Then deploy version 2 of the application:
-
-```
+# Then deploy version 2 of the application
 $ kubectl apply -f app-v2.yaml
-```
 
-Test the second deployment progress:
-
-```
+# Test the second deployment progress
 $ service=$(minikube service my-app --url)
 $ while sleep 0.1; do curl "$service"; done
-```
 
-In case you discover some issue with the new version, you can undo the rollout:
-
-```
+# In case you discover some issue with the new version, you can undo the
+# rollout
 $ kubectl rollout undo deploy my-app
-```
 
-If you can also pause the rollout if you want to run the application for a
-subset of users:
-
-```
+# If you can also pause the rollout if you want to run the application for a
+# subset of users
 $ kubectl rollout pause deploy my-app
-```
 
-Then if you are satisfy with the result, rollout:
-
-```
+# Then if you are satisfy with the result, rollout
 $ kubectl rollout resume deploy my-app
 ```
 
 ### Cleanup
 
-```
+```bash
 $ kubectl delete all -l app=my-app
 ```
