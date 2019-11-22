@@ -31,8 +31,9 @@ $ curl $(minikube service my-app --url)
 # It will show you a better view on the progress
 $ watch kubectl get po
 
-# Then deploy version 2 of the application
+# Then deploy version 2 of the application and scale down version 1 to 9 replicas at same time
 $ kubectl apply -f app-v2.yaml
+$ kubectl scale --replicas=9 deploy my-app-v1
 
 # Only one pod with the new version should be running.
 # You can test if the second deployment was successful
