@@ -22,8 +22,8 @@ to carefully choose the right strategy to make your infrastructure resilient.
 ![deployment strategy decision diagram](decision-diagram.png)
 
 Before experimenting, checkout the following resources:
-- [CNCF prensentation](https://www.youtube.com/watch?v=1oPhfKye5Pg)
-- [CNCF prensentation slides](https://www.slideshare.net/EtienneTremel/kubernetes-deployment-strategies-cncf-webinar)
+- [CNCF presentation](https://www.youtube.com/watch?v=1oPhfKye5Pg)
+- [CNCF presentation slides](https://www.slideshare.net/EtienneTremel/kubernetes-deployment-strategies-cncf-webinar)
 - [Kubernetes deployment strategies](https://container-solutions.com/kubernetes-deployment-strategies/)
 - [Six Strategies for Application Deployment](https://thenewstack.io/deployment-strategies/).
 - [Canary deployment using Istio and Helm](https://github.com/etiennetremel/istio-cross-namespace-canary-release-demo)
