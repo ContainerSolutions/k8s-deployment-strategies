@@ -39,8 +39,8 @@ Before starting, it is recommended to know the basic concept of the
 
 ### Deploy Istio
 
-In this example, Istio 1.0.0 is used. To install Istio, follow the
-[instructions](https://istio.io/docs/setup/kubernetes/helm-install/) from the
+In this example, Istio 1.13.4 is used. To install Istio, follow the
+[instructions](https://istio.io/latest/docs/setup/install/helm/) from the
 Istio website.
 
 Automatic sidecar injection should be enabled by default. Then annotate the

@@ -1,7 +1,7 @@
 Kubernetes deployment strategies
 ================================
 
-> In Kubernetes there is few different way to release an application, you have
+> In Kubernetes there are a few different ways to release an application, you have
 to carefully choose the right strategy to make your infrastructure resilient.
 
 - [recreate](recreate/): terminate the old version and release the new one
@@ -32,48 +32,44 @@ Before experimenting, checkout the following resources:
 ## Getting started
 
 These examples were created and tested on [Minikube](http://github.com/kubernetes/minikube)
-running with Kubernetes v1.10.0.
+running with Kubernetes v1.25.2 and [Rancher Desktop](https://rancherdesktop.io/) running
+with Kubernetes 1.23.6.
+
+On MacOS the hypervisor VM does not have external connectivity so docker image pulls
+will fail. To resolve this, install another driver such as
+[VirtualBox](https://www.virtualbox.org/) and add `--vm-driver virtualbox`
+to the command to be able to pull images.
 
 ```
-$ minikube start --kubernetes-version v1.10.0 --memory 8192 --cpus 2
+$ minikube start --kubernetes-version v1.25.2 --memory 8192 --cpus 2
 ```
-
 
 ## Visualizing using Prometheus and Grafana
 
 The following steps describe how to setup Prometheus and Grafana to visualize
 the progress and performance of a deployment.
 
-### Install Helm
+### Install Helm3
 
-To install Helm, follow the instructions provided on their
+To install Helm3, follow the instructions provided on their
 [website](https://github.com/kubernetes/helm/releases).
-
-```
-$ helm init
-```
 
 ### Install Prometheus
 
 ```
-$ helm install \
-    --namespace=monitoring \
-    --name=prometheus \
-    --version=7.0.0 \
-    stable/prometheus
+$ helm install prometheus prometheus-community/prometheus \
+    --create-namespace --namespace=monitoring
 ```
 
 ### Install Grafana
 
 ```
-$ helm install \
+$ helm install grafana \
     --namespace=monitoring \
-    --name=grafana \
-    --version=1.12.0 \
     --set=adminUser=admin \
     --set=adminPassword=admin \
     --set=service.type=NodePort \
-    stable/grafana
+    grafana/grafana
 ```
 
 ### Setup Grafana
@@ -95,11 +91,15 @@ Url: http://prometheus-server
 Access: Server
 ```
 
-Create a dashboard with a Graph. Use the following query:
+Create a dashboard with a Time series or import
+the [JSON export](grafana-dashboard.json). Use the following query:
 
 ```
-sum(rate(http_requests_total{app="my-app"}[5m])) by (version)
+sum(rate(http_requests_total{app="my-app"}[2m])) by (version)
 ```
+
+Since we installed Prometheus with default settings, it is using the default scrape
+interval of `1m` so the range cannot be lower than that.
 
 To have a better overview of the version, add `{{version}}` in the legend field.
 

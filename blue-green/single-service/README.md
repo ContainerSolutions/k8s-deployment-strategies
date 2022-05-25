@@ -37,7 +37,8 @@ deployment "my-app-v2" successfully rolled out
 # traffic to the first deployment.
 
 # If necessary, you can manually test one of the pod by port-forwarding it to
-# your local environment.
+# your local environment:
+$ kubectl port-forward <name of pod> 8080:8080
 
 # Once your are ready, you can switch the traffic to the new version by patching
 # the service to send traffic to all pods with label version=v2.0.0
