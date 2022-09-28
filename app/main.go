@@ -36,7 +36,7 @@ var (
 		prometheus.CounterOpts{
 			Name: "http_requests_total",
 			Help: "A counter for requests to the wrapped handler.",
-			ConstLabels: map[string]string{
+			ConstLabels: prometheus.Labels{
 				"version": version,
 			},
 		},
@@ -48,7 +48,7 @@ var (
 			Name:    "request_duration_seconds",
 			Help:    "A histogram of latencies for requests.",
 			Buckets: []float64{.25, .5, 1, 2.5, 5, 10},
-			ConstLabels: map[string]string{
+			ConstLabels: prometheus.Labels{
 				"version": version,
 			},
 		},
@@ -60,19 +60,18 @@ var (
 			Name:    "response_size_bytes",
 			Help:    "A histogram of response sizes for requests.",
 			Buckets: []float64{200, 500, 900, 1500},
-			ConstLabels: map[string]string{
+			ConstLabels: prometheus.Labels{
 				"version": version,
 			},
 		},
 		[]string{"code", "method"},
 	)
 
-	version string
+	version = os.Getenv("VERSION")
 )
 
 func init() {
 	prometheus.MustRegister(inFlightGauge, counter, duration, responseSize)
-	version = os.Getenv("VERSION")
 }
 
 func main() {
