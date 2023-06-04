@@ -1,22 +1,14 @@
+---
 apiVersion: v1
-kind: Service
+kind: Namespace
 metadata:
-  name: my-app
-  labels:
-    app: my-app
-spec:
-  type: NodePort
-  ports:
-  - name: http
-    port: 80
-    targetPort: http
-  selector:
-    app: my-app
+  name: ns-recreate
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: my-app
+  namespace: ns-recreate
+  name: deployment-my-app
   labels:
     app: my-app
 spec:
@@ -37,6 +29,8 @@ spec:
       annotations:
         prometheus.io/scrape: "true"
         prometheus.io/port: "9101"
+        prometheus.io/path: "/metrics"
+        prometheus.io/scheme: "http"
     spec:
       containers:
       - name: my-app
@@ -60,3 +54,38 @@ spec:
             path: /ready
             port: probe
           periodSeconds: 5
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  namespace: ns-recreate
+  name: ingress-recreate
+  annotations:
+    kubernetes.io/ingress.class: azure/application-gateway
+spec:
+  rules:
+  - http:
+      paths:
+      - path: /
+        pathType: Exact
+        backend:
+          service:
+            name: svc-my-app
+            port:
+              number: 80
+---
+apiVersion: v1
+kind: Service
+metadata:
+  namespace: ns-recreate
+  name: svc-my-app
+  labels:
+    app: my-app
+spec:
+  type: ClusterIP
+  ports:
+  - name: http
+    port: 80
+    targetPort: http
+  selector:
+    app: my-app

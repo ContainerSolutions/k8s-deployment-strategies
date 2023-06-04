@@ -21,17 +21,18 @@
       }
     ]
   },
+  "description": "",
   "editable": true,
   "fiscalYearStartMonth": 0,
   "graphTooltip": 0,
-  "id": 1,
+  "id": 40,
   "links": [],
   "liveNow": false,
   "panels": [
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "VqQ98CX7z"
+        "uid": "amw-poc1-aks"
       },
       "description": "",
       "fieldConfig": {
@@ -40,11 +41,13 @@
             "mode": "palette-classic"
           },
           "custom": {
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
             "axisLabel": "",
             "axisPlacement": "auto",
             "barAlignment": 0,
-            "drawStyle": "bars",
-            "fillOpacity": 10,
+            "drawStyle": "line",
+            "fillOpacity": 25,
             "gradientMode": "none",
             "hideFrom": {
               "legend": false,
@@ -52,19 +55,16 @@
               "viz": false
             },
             "lineInterpolation": "linear",
-            "lineStyle": {
-              "fill": "solid"
-            },
             "lineWidth": 1,
             "pointSize": 5,
             "scaleDistribution": {
               "type": "linear"
             },
-            "showPoints": "never",
-            "spanNulls": true,
+            "showPoints": "auto",
+            "spanNulls": false,
             "stacking": {
               "group": "A",
-              "mode": "none"
+              "mode": "percent"
             },
             "thresholdsStyle": {
               "mode": "off"
@@ -83,14 +83,13 @@
                 "value": 80
               }
             ]
-          },
-          "unit": "short"
+          }
         },
         "overrides": []
       },
       "gridPos": {
-        "h": 9,
-        "w": 12,
+        "h": 13,
+        "w": 24,
         "x": 0,
         "y": 0
       },
@@ -99,10 +98,11 @@
         "legend": {
           "calcs": [],
           "displayMode": "list",
-          "placement": "bottom"
+          "placement": "bottom",
+          "showLegend": true
         },
         "tooltip": {
-          "mode": "multi",
+          "mode": "single",
           "sort": "none"
         }
       },
@@ -111,15 +111,13 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "VqQ98CX7z"
+            "uid": "amw-poc1-aks"
           },
           "editorMode": "code",
           "exemplar": false,
           "expr": "sum(rate(http_requests_total{app=\"my-app\"}[2m])) by (version)",
-          "format": "time_series",
-          "instant": false,
-          "interval": "",
-          "legendFormat": "{{version}}",
+          "format": "heatmap",
+          "legendFormat": "__auto",
           "range": true,
           "refId": "A"
         }
@@ -128,10 +126,16 @@
       "type": "timeseries"
     }
   ],
-  "refresh": "",
-  "schemaVersion": 36,
+  "refresh": "5s",
+  "revision": 1,
+  "schemaVersion": 38,
   "style": "dark",
-  "tags": [],
+  "tags": [
+    "aks",
+    "k8s",
+    "azure",
+    "deployment"
+  ],
   "templating": {
     "list": []
   },
@@ -141,8 +145,8 @@
   },
   "timepicker": {},
   "timezone": "",
-  "title": "k8s-deployment-strategies dashboard",
+  "title": "k8s-deployment-strategies (Azure Edition) dashboard",
   "uid": "WM-nwCX7k",
-  "version": 3,
+  "version": 9,
   "weekStart": ""
 }

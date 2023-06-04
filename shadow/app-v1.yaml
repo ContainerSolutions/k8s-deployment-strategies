@@ -33,6 +33,8 @@ spec:
       annotations:
         prometheus.io/scrape: "true"
         prometheus.io/port: "9101"
+        prometheus.io/path: "/metrics"
+        prometheus.io/scheme: "http"
     spec:
       containers:
       - name: my-app

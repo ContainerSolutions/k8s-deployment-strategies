@@ -1,5 +1,4 @@
-Kubernetes deployment strategies
-================================
+# Kubernetes deployment strategies (Azure Edition)
 
 > In Kubernetes there are a few different ways to release an application, you have
 to carefully choose the right strategy to make your infrastructure resilient.
@@ -22,6 +21,7 @@ to carefully choose the right strategy to make your infrastructure resilient.
 ![deployment strategy decision diagram](decision-diagram.png)
 
 Before experimenting, checkout the following resources:
+
 - [CNCF presentation](https://www.youtube.com/watch?v=1oPhfKye5Pg)
 - [CNCF presentation slides](https://www.slideshare.net/EtienneTremel/kubernetes-deployment-strategies-cncf-webinar)
 - [Kubernetes deployment strategies](https://container-solutions.com/kubernetes-deployment-strategies/)
@@ -31,79 +31,40 @@ Before experimenting, checkout the following resources:
 
 ## Getting started
 
-These examples were created and tested on [Minikube](http://github.com/kubernetes/minikube)
-running with Kubernetes v1.25.2 and [Rancher Desktop](https://rancherdesktop.io/) running
-with Kubernetes 1.23.6.
+These examples were created and tested on
 
-On MacOS the hypervisor VM does not have external connectivity so docker image pulls
-will fail. To resolve this, install another driver such as
-[VirtualBox](https://www.virtualbox.org/) and add `--vm-driver virtualbox`
-to the command to be able to pull images.
+- Azure Kubernetes Service v1.26.3
+- Azure Application Gateway Ingress Controller (AGIC)
+- Azure Monitor managed service for Prometheus
+- Azure Monitor managed service for Grafana v9.4.10 (5e7d575327)
 
-```
-$ minikube start --kubernetes-version v1.25.2 --memory 8192 --cpus 2
-```
+## Deploy Azure Kubernetes Service and other resources
 
-## Visualizing using Prometheus and Grafana
-
-The following steps describe how to setup Prometheus and Grafana to visualize
-the progress and performance of a deployment.
-
-### Install Helm3
-
-To install Helm3, follow the instructions provided on their
-[website](https://github.com/kubernetes/helm/releases).
-
-### Install Prometheus
-
-```
-$ helm install prometheus prometheus-community/prometheus \
-    --create-namespace --namespace=monitoring
+```bash
+$ cd ./deploy
+$ ./deploy-aks.sh
+$ kubectl apply -f ama-metrics-prometheus-config.yml
+$ kubectl apply -f ama-metrics-settings-configmap.yml
 ```
 
-### Install Grafana
+## Import Grafana dashboard in Azure Managed Grafana
 
-```
-$ helm install grafana \
-    --namespace=monitoring \
-    --set=adminUser=admin \
-    --set=adminPassword=admin \
-    --set=service.type=NodePort \
-    grafana/grafana
-```
+![](./images/azure-managed-grafana.png)
 
-### Setup Grafana
-
-Now that Prometheus and Grafana are up and running, you can access Grafana:
-
-```
-$ minikube service grafana
-```
-
-To login, username: `admin`, password: `admin`.
-
-Then you need to connect Grafana to Prometheus, to do so, add a DataSource:
-
-```
-Name: prometheus
-Type: Prometheus
-Url: http://prometheus-server
-Access: Server
-```
-
-Create a dashboard with a Time series or import
-the [JSON export](grafana-dashboard.json). Use the following query:
+Create a dashboard with a Time series or import the [JSON export](grafana-dashboard.json). Use the following query:
 
 ```
 sum(rate(http_requests_total{app="my-app"}[2m])) by (version)
 ```
+
+![](./images/prometheus-query.png)
 
 Since we installed Prometheus with default settings, it is using the default scrape
 interval of `1m` so the range cannot be lower than that.
 
 To have a better overview of the version, add `{{version}}` in the legend field.
 
-#### Example graph
+## Example graph
 
 Recreate:
 
@@ -128,3 +89,16 @@ A/B testing:
 Shadow:
 
 ![kubernetes shadow deployment](shadow/grafana-shadow.png)
+
+
+## Troubleshooting
+
+### Troubleshoot collection of Prometheus metrics in Azure Monitor
+
+Based on [Troubleshoot collection of Prometheus metrics in Azure Monitor](https://learn.microsoft.com/en-us/azure/azure-monitor/essentials/prometheus-metrics-troubleshoot)
+
+```bash
+kubectl port-forward ama-metrics-* -n kube-system 9090
+```
+
+![Port Forward prometheus](./images/port-forward-prometheus.png)
