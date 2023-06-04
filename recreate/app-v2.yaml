@@ -1,7 +1,9 @@
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: my-app
+  namespace: ns-recreate
+  name: deployment-my-app
   labels:
     app: my-app
 spec:
@@ -25,6 +27,8 @@ spec:
       annotations:
         prometheus.io/scrape: "true"
         prometheus.io/port: "9101"
+        prometheus.io/path: "/metrics"
+        prometheus.io/scheme: "http"
     spec:
       containers:
       - name: my-app

@@ -38,27 +38,33 @@ These examples were created and tested on
 - Azure Monitor managed service for Prometheus
 - Azure Monitor managed service for Grafana v9.4.10 (5e7d575327)
 
-## Deploy Azure Kubernetes Service
+## Deploy Azure Kubernetes Service and other resources
 
 ```bash
+$ cd ./deploy
 $ ./deploy-aks.sh
+$ kubectl apply -f ama-metrics-prometheus-config.yml
+$ kubectl apply -f ama-metrics-settings-configmap.yml
 ```
 
-## Import Grafana dashboard
+## Import Grafana dashboard in Azure Managed Grafana
 
-Create a dashboard with a Time series or import
-the [JSON export](grafana-dashboard.json). Use the following query:
+![](./images/azure-managed-grafana.png)
+
+Create a dashboard with a Time series or import the [JSON export](grafana-dashboard.json). Use the following query:
 
 ```
 sum(rate(http_requests_total{app="my-app"}[2m])) by (version)
 ```
+
+![](./images/prometheus-query.png)
 
 Since we installed Prometheus with default settings, it is using the default scrape
 interval of `1m` so the range cannot be lower than that.
 
 To have a better overview of the version, add `{{version}}` in the legend field.
 
-#### Example graph
+## Example graph
 
 Recreate:
 
@@ -83,3 +89,16 @@ A/B testing:
 Shadow:
 
 ![kubernetes shadow deployment](shadow/grafana-shadow.png)
+
+
+## Troubleshooting
+
+### Troubleshoot collection of Prometheus metrics in Azure Monitor
+
+Based on [Troubleshoot collection of Prometheus metrics in Azure Monitor](https://learn.microsoft.com/en-us/azure/azure-monitor/essentials/prometheus-metrics-troubleshoot)
+
+```bash
+kubectl port-forward ama-metrics-* -n kube-system 9090
+```
+
+![Port Forward prometheus](./images/port-forward-prometheus.png)

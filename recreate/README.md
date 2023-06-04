@@ -22,21 +22,38 @@ of the application.
 ```
 # Deploy the first application
 $ kubectl apply -f app-v1.yaml
+namespace/ns-recreate created
+ingress.networking.k8s.io/ingress-recreate created
+service/svc-my-app created
+deployment.apps/deployment-my-app created
 
 # Test if the deployment was successful
-$ curl $(minikube service my-app --url)
-2018-01-28T00:22:04+01:00 - Host: host-1, Version: v1.0.0
+$ curl http://AGIC-PUBLIC-IP
+Host: deployment-my-app-6888dcf989-lf5jk, Version: v1.0.0
 
 # To see the deployment in action, open a new terminal and run the following
 # command
-$ watch kubectl get po
+$ watch kubectl get pod -n ns-recreate
+NAME                                 READY   STATUS    RESTARTS   AGE
+deployment-my-app-6888dcf989-d8zsc   1/1     Running   0          94s
+deployment-my-app-6888dcf989-m72j5   1/1     Running   0          94s
+deployment-my-app-6888dcf989-rtd7x   1/1     Running   0          94s
+
+# Test the second deployment progress
+$ while sleep 0.1; do curl http://AGIC-PUBLIC-IP; done
+Host: deployment-my-app-6888dcf989-m72j5, Version: v1.0.0
+Host: deployment-my-app-6888dcf989-rtd7x, Version: v1.0.0
+Host: deployment-my-app-6888dcf989-d8zsc, Version: v1.0.0
+Host: deployment-my-app-6888dcf989-d8zsc, Version: v1.0.0
+Host: deployment-my-app-6888dcf989-m72j5, Version: v1.0.0
+Host: deployment-my-app-6888dcf989-rtd7x, Version: v1.0.0
+...omit...
+
 
 # Then deploy version 2 of the application
 $ kubectl apply -f app-v2.yaml
 
-# Test the second deployment progress
-$ service=$(minikube service my-app --url)
-$ while sleep 0.1; do curl "$service"; done
+
 ```
 
 ### Cleanup
