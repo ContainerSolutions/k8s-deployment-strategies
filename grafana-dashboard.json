@@ -21,17 +21,97 @@
       }
     ]
   },
+  "description": "",
   "editable": true,
   "fiscalYearStartMonth": 0,
   "graphTooltip": 0,
-  "id": 1,
+  "id": 40,
   "links": [],
   "liveNow": false,
   "panels": [
     {
       "datasource": {
+        "type": "datasource",
+        "uid": "grafana"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 0
+      },
+      "id": 4,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "title": "Panel Title",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
         "type": "prometheus",
-        "uid": "VqQ98CX7z"
+        "uid": "amw-poc1-aks"
       },
       "description": "",
       "fieldConfig": {
@@ -40,6 +120,8 @@
             "mode": "palette-classic"
           },
           "custom": {
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
             "axisLabel": "",
             "axisPlacement": "auto",
             "barAlignment": 0,
@@ -92,14 +174,15 @@
         "h": 9,
         "w": 12,
         "x": 0,
-        "y": 0
+        "y": 1
       },
       "id": 2,
       "options": {
         "legend": {
           "calcs": [],
           "displayMode": "list",
-          "placement": "bottom"
+          "placement": "bottom",
+          "showLegend": true
         },
         "tooltip": {
           "mode": "multi",
@@ -111,16 +194,8 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "VqQ98CX7z"
+            "uid": "amw-poc1-aks"
           },
-          "editorMode": "code",
-          "exemplar": false,
-          "expr": "sum(rate(http_requests_total{app=\"my-app\"}[2m])) by (version)",
-          "format": "time_series",
-          "instant": false,
-          "interval": "",
-          "legendFormat": "{{version}}",
-          "range": true,
           "refId": "A"
         }
       ],
@@ -128,21 +203,27 @@
       "type": "timeseries"
     }
   ],
-  "refresh": "",
-  "schemaVersion": 36,
+  "refresh": false,
+  "revision": 1,
+  "schemaVersion": 38,
   "style": "dark",
-  "tags": [],
+  "tags": [
+    "aks",
+    "k8s",
+    "azure",
+    "deployment"
+  ],
   "templating": {
     "list": []
   },
   "time": {
-    "from": "now-15m",
-    "to": "now"
+    "from": "2023-06-04T14:00:40.719Z",
+    "to": "2023-06-04T14:09:01.419Z"
   },
   "timepicker": {},
   "timezone": "",
-  "title": "k8s-deployment-strategies dashboard",
+  "title": "k8s-deployment-strategies (Azure Edition) dashboard",
   "uid": "WM-nwCX7k",
-  "version": 3,
+  "version": 4,
   "weekStart": ""
 }
