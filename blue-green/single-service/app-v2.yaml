@@ -1,7 +1,8 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: my-app-v2
+  namespace: ns-bluegreen
+  name: deployment-my-app-v2
   labels:
     app: my-app
 spec:
@@ -18,7 +19,10 @@ spec:
       annotations:
         prometheus.io/scrape: "true"
         prometheus.io/port: "9101"
+        prometheus.io/path: "/metrics"
+        prometheus.io/scheme: "http"
     spec:
+      terminationGracePeriodSeconds: 100
       containers:
       - name: my-app
         image: containersol/k8s-deployment-strategies
@@ -41,3 +45,7 @@ spec:
             path: /ready
             port: probe
           periodSeconds: 5
+        lifecycle:
+          preStop:
+            exec:
+              command: ["sleep","90"]
