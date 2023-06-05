@@ -37,8 +37,7 @@ $ ./curl.py apgw.aks.aliez.tw
 Error: Status code is 404 - count: 1
 Error: Status code is 404 - count: 2
 Error: Status code is 404 - count: 3
-
-
+...omit...
 
 # Test if the deployment was successful
 $ export AGIC-PUBLIC-IP="apgw.aks.aliez.tw"
