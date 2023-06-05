@@ -19,6 +19,7 @@ Ingress controller, this example would also work with the
 
 ## In practice
 
+```
 # Deploy version 1 of application a and b and the ingress
 $ kubectl apply -f app-a-v1.yaml -f app-b-v1.yaml -f ingress-v1.yaml
 namespace/ns-bluegreen created
