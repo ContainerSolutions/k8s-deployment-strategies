@@ -1,5 +1,4 @@
-A/B testing using Istio
-=======================
+# A/B testing using Istio
 
 > Version B is released to a subset of users under specific condition.
 
@@ -34,20 +33,28 @@ versions:
 
 ## In practice
 
-Before starting, it is recommended to know the basic concept of the
-[Istio routing API](https://istio.io/blog/2018/v1alpha3-routing/).
+### Verify Istio service mesh add-on is enabled and workable
 
-### Deploy Istio
+Watch and verify that all `aks-istio-*` pods have are running/completed
 
-In this example, Istio 1.13.4 is used. To install Istio, follow the
-[instructions](https://istio.io/latest/docs/setup/install/helm/) from the
-Istio website.
+```bash
+$ watch kubectl get pods -n aks-istio-system
+NAME                             READY   STATUS    RESTARTS   AGE
+istiod-asm-1-17-bd9bc86f-9rnbs   1/1     Running   0          3h32m
+istiod-asm-1-17-bd9bc86f-m9xjj   1/1     Running   0          3h33m
 
-Automatic sidecar injection should be enabled by default. Then annotate the
-default namespace to enable it.
-
+$ watch kubectl get svc aks-istio-ingressgateway-external -n aks-istio-ingress
+NAME                                TYPE           CLUSTER-IP     EXTERNAL-IP      PORT(S)                                      AGE
+aks-istio-ingressgateway-external   LoadBalancer   10.0.216.248   x.x.x.x   15021:32542/TCP,80:31236/TCP,443:31306/TCP   87m
 ```
-$ kubectl label namespace default istio-injection=enabled
+
+### Enable sidecar injection for the namespace level
+
+To automatically install sidecar to any new pods, annotate your namespaces:
+
+```yaml
+# The default istio-injection=enabled labeling doesn't work. Explicit versioning (istio.io/rev=asm-1-17) is required.
+kubectl label namespace/ns-canary-istio istio.io/rev=asm-1-17
 ```
 
 ### Deploy both applications
@@ -56,72 +63,113 @@ Back to the a/b testing directory from this repo, deploy both applications using
 the istioctl command to inject the Istio sidecar container which is used to
 proxy requests:
 
-```
+```bash
 $ kubectl apply -f app-v1.yaml -f app-v2.yaml
+namespace/ns-ab-testing created
+deployment.apps/deployment-my-app-v1 created
+service/svc-my-app-v1 created
+namespace/ns-ab-testing unchanged
+deployment.apps/deployment-my-app-v2 created
+service/my-app-v2 created
 ```
 
 Expose both services via the Istio Gateway and create a VirtualService to match
 requests to the my-app-v1 service:
 
-```
-$ kubectl apply -f ./gateway.yaml -f ./virtualservice.yaml
+```bash
+$ kubectl apply -f ./gateway.yaml -f ./virtualservice-wildcard.yaml
+gateway.networking.istio.io/istio-http-gateway created
+virtualservice.networking.istio.io/vs-wildcard-my-app created
 ```
 
 At this point, if you make a request against the Istio ingress gateway with the
-given host `my-app.local`, you should only see version 1 responding:
+given host `test.aks.aliez.tw`, you should only see version 1 responding:
 
-```
-$ curl $(minikube service istio-ingressgateway -n istio-system --url | head -n1) -H 'Host: my-app.local'
-Host: my-app-v1-6d577d97b4-lxn22, Version: v1.0.0
+```bash
+# Get the Istio ingress gateway IP
+$ export ISTIO_INGRESS_GATEWAY_IP=$(kubectl get service aks-istio-ingressgateway-external \
+    --namespace=aks-istio-ingress \
+    --output='jsonpath={.status.loadBalancer.ingress[0].ip}')
+$ echo $ISTIO_INGRESS_GATEWAY_IP
+x.x.x.x
+
+# Match virtualservice-wildcard rules, 100% traffic to v1.0.0
+$ ./curl.py $ISTIO_INGRESS_GATEWAY_IP
+Host: deployment-my-app-v1-657c65694c-645mm, Version: v1.0.0
+Host: deployment-my-app-v1-657c65694c-645mm, Version: v1.0.0
+Host: deployment-my-app-v1-657c65694c-645mm, Version: v1.0.0
+...omit...
 ```
 
 ### Shift traffic based on weight
 
 Apply the Istio VirtualService rule based on weight:
 
-```
+```bash
 $ kubectl apply -f ./virtualservice-weight.yaml
+virtualservice.networking.istio.io/vs-weight-my-app configured
 ```
 
 You can now test if the traffic is correctly splitted amongst both versions:
 
-```
-$ service=$(minikube service istio-ingressgateway -n istio-system --url | head -n1)
-$ while sleep 0.1; do curl "$service" -H 'Host: my-app.local'; done
+```bash
+# Match virtualservice-weight rules, 20% traffic to v1.0.0, 80% traffic to v2.0.0
+# Host: test.aks.aliez.tw
+$ ./curl.py $ISTIO_INGRESS_GATEWAY_IP test.aks.aliez.tw
+Host: deployment-my-app-v1-657c65694c-645mm, Version: v1.0.0
+Host: deployment-my-app-v2-6f976cb5c9-nkx69, Version: v2.0.0
+Host: deployment-my-app-v2-6f976cb5c9-nkx69, Version: v2.0.0
+Host: deployment-my-app-v2-6f976cb5c9-nkx69, Version: v2.0.0
+Host: deployment-my-app-v1-657c65694c-645mm, Version: v1.0.0
+Host: deployment-my-app-v2-6f976cb5c9-nkx69, Version: v2.0.0
+Host: deployment-my-app-v1-657c65694c-645mm, Version: v1.0.0
+Host: deployment-my-app-v2-6f976cb5c9-nkx69, Version: v2.0.0
+Host: deployment-my-app-v2-6f976cb5c9-nkx69, Version: v2.0.0
+Host: deployment-my-app-v2-6f976cb5c9-nkx69, Version: v2.0.0
+...omit...
 ```
 
-You should approximately see 1 request on 10 ending up in the version 2.
+You should approximately see 8 requests on 10 ending up in the version 2.
 
 In the `./virtualservice-weight.yaml` file, you can edit the weight of each
 destination and apply the updated rule to Minikube:
 
-```
+```bash
 $ kubectl apply -f ./virtualservice-weight.yaml
+virtualservice.networking.istio.io/vs-weight-my-app configured
 ```
 
 ### Shift traffic based on headers
 
 Apply the Istio VirtualService rule based on headers:
 
-```
+```bash
 $ kubectl apply -f ./virtualservice-match.yaml
+virtualservice.networking.istio.io/vs-match-my-app configured
 ```
 
 You can now test if the traffic is hitting the correct set of instances:
 
-```
-$ service=$(minikube service istio-ingressgateway -n istio-system --url | head -n1)
-$ curl $service -H 'Host: my-app.local' -H 'X-API-Version: v1.0.0'
-Host: my-app-v1-6d577d97b4-s4h6k, Version: v1.0.0
+```bash
+$ curl $ISTIO_INGRESS_GATEWAY_IP -H 'Host: uat.aks.aliez.tw' -H 'X-API-Version: v1.0.0'
+Host: deployment-my-app-v1-657c65694c-645mm, Version: v1.0.0
 
-$ curl $service -H 'Host: my-app.local' -H 'X-API-Version: v2.0.0'
-Host: my-app-v2-65f9fdbb88-jtctt, Version: v2.0.0
+$ curl $ISTIO_INGRESS_GATEWAY_IP -H 'Host: uat.aks.aliez.tw' -H 'X-API-Version: v2.0.0'
+Host: deployment-my-app-v2-6f976cb5c9-nkx69, Version: v2.0.0
 ```
 
 ### Cleanup
 
-```
-$ kubectl delete gateway/my-app virtualservice/my-app
-$ kubectl delete -f ./app-v1.yaml -f ./app-v2.yaml
-$ kubectl delete -f <PATH-TO-ISTIO>/install/kubernetes/istio-demo.yaml
+```bash
+$ kubectl delete -f .
+namespace "ns-ab-testing" deleted
+deployment.apps "deployment-my-app-v1" deleted
+service "svc-my-app-v1" deleted
+namespace "ns-ab-testing" deleted
+deployment.apps "deployment-my-app-v2" deleted
+service "svc-my-app-v2" deleted
+gateway.networking.istio.io "istio-http-gateway" deleted
+virtualservice.networking.istio.io "vs-match-my-app" deleted
+virtualservice.networking.istio.io "vs-weight-my-app" deleted
+virtualservice.networking.istio.io "vs-wildcard-my-app" deleted
 ```

@@ -1,19 +1,21 @@
+---
 apiVersion: networking.istio.io/v1alpha3
 kind: VirtualService
 metadata:
-  name: my-app
+  namespace: ns-ab-testing
+  name: vs-weight-my-app
   labels:
     app: my-app
 spec:
   hosts:
-    - my-app.local
+    - test.aks.aliez.tw
   gateways:
-    - my-app
+    - istio-http-gateway
   http:
     - route:
-        - destination:
-            host: my-app-v1
-          weight: 90
-        - destination:
-            host: my-app-v2
-          weight: 10
+      - destination:
+          host: svc-my-app-v1
+        weight: 20
+      - destination:
+          host: svc-my-app-v2
+        weight: 80

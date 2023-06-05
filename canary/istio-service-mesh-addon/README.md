@@ -48,8 +48,6 @@ kubectl label namespace/ns-canary-istio istio.io/rev=asm-1-17
 
 ### Deploy the application
 
-
-
 Deploy all of the yaml files in this directory
 
 TODO: Split files and apply/verify seperately
