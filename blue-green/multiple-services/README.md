@@ -12,14 +12,14 @@ Ingress controller, this example would also work with the
 ## Steps to follow
 
 1. service a and b are serving traffic
-1. deploy new version of both services
-1. wait for all services to be ready
-1. switch incoming traffic from version 1 to version 2
-1. shutdown version 1
+2. deploy new version of both services
+3. wait for all services to be ready
+4. switch incoming traffic from version 1 to version 2
+5. shutdown version 1
 
 ## In practice
 
-```
+```bash
 # Deploy version 1 of application a and b and the ingress
 $ kubectl apply -f app-a-v1.yaml -f app-b-v1.yaml -f ingress-v1.yaml
 namespace/ns-bluegreen created

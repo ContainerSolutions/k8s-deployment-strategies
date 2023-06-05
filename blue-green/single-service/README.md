@@ -1,5 +1,4 @@
-Blue/green deployment to release a single service
-=================================================
+# Blue/green deployment to release a single service
 
 > In this example, we release a new version of a single service using the
 blue/green deployment strategy.
@@ -7,10 +6,10 @@ blue/green deployment strategy.
 ## Steps to follow
 
 1. version 1 is serving traffic
-1. deploy version 2
-1. wait until version 2 is ready
-1. switch incoming traffic from version 1 to version 2
-1. shutdown version 1
+2. deploy version 2
+3. wait until version 2 is ready
+4. switch incoming traffic from version 1 to version 2
+5. shutdown version 1
 
 ## In practice
 
@@ -23,8 +22,7 @@ ingress.networking.k8s.io/ingress-bluegreen created
 service/svc-my-app created
 
 # Test if the deployment was successful
-$ export AGIC-PUBLIC-IP="apgw.aks.aliez.tw"
-$ curl.py $AGIC-PUBLIC-IP
+$ ./curl.py apgw.aks.aliez.tw
 Host: deployment-my-app-v1-657c65694c-jg4hn, Version: v1.0.0
 Host: deployment-my-app-v1-657c65694c-s77mq, Version: v1.0.0
 Host: deployment-my-app-v1-657c65694c-62w74, Version: v1.0.0
@@ -35,7 +33,7 @@ Host: deployment-my-app-v1-657c65694c-jg4hn, Version: v1.0.0
 
 # To see the deployment in action, open a new terminal and run the following
 command:
-$ watch kubectl get po
+$ watch kubectl get pod -n ns-bluegreen
 NAME                                    READY   STATUS    RESTARTS   AGE
 deployment-my-app-v1-657c65694c-62w74   1/1     Running   0          2m27s
 deployment-my-app-v1-657c65694c-jg4hn   1/1     Running   0          2m27s
@@ -83,6 +81,10 @@ service/svc-my-app patched
 # deployment
 $ kubectl delete deployment/deployment-my-app-v1 -n ns-bluegreen
 ```
+
+### Screen Shot
+
+![ScreenShot Bluegreen](screenshot-bluegreen.png)
 
 ### Cleanup
 

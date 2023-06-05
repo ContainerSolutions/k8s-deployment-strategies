@@ -1,5 +1,4 @@
-Canary deployment
-=================
+# Canary deployment
 
 > Version B is released to a subset of users, then proceed to a full rollout.
 
@@ -17,13 +16,10 @@ platform.
 adjusting the number of replicas or if you use Nginx as Ingress controller you
 can define fine grained traffic splitting via Ingress annotations.**
 
-- [NodePort](NodePort/)
-- [nginx-ingress](nginx-ingress/)
+- [Application Gateway Ingress Controller](application-gateway-ingress-controller/)
+- [Istio service mesh add-on](istio-service-mesh-addon/)
 
-*If you use Helm to deploy applications, the following repository demonstrate
-how to make a [canary deployment using Istio and
-Helm](https://github.com/etiennetremel/istio-cross-namespace-canary-release-demo).*
 
 ## Limitation
 
-- Application Gateway Ingress Controller doesn't support Canary deployment.
+- Application Gateway Ingress Controller doesn't support Traffic Shifting.

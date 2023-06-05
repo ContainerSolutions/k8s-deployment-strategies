@@ -1,5 +1,4 @@
-Ramped deployment
-=================
+# Ramped deployment
 
 > Version B is slowly rolled out and replacing version A. Also known as
 rolling-update or incremental.
@@ -32,36 +31,78 @@ following parameters to increase the deployment time:
 ```bash
 # Deploy the first application
 $ kubectl apply -f app-v1.yaml
+namespace/ns-ramped created
+deployment.apps/deployment-my-app created
+ingress.networking.k8s.io/ingress-ramped created
+service/svc-my-app created
 
 # Test if the deployment was successful
-$ curl $(minikube service my-app --url)
-2018-01-28T00:22:04+01:00 - Host: host-1, Version: v1.0.0
+$ ./curl.py apgw.aks.aliez.tw
+Host: deployment-my-app-657c65694c-l4vlv, Version: v1.0.0
+Host: deployment-my-app-657c65694c-clv4f, Version: v1.0.0
+Host: deployment-my-app-657c65694c-dnhb5, Version: v1.0.0
+Host: deployment-my-app-657c65694c-dmk6v, Version: v1.0.0
+...omitted...
 
 # To see the deployment in action, open a new terminal and run the following
 # command
-$ watch kubectl get po
+$ watch kubectl get pod -n ns-ramped
+NAME                                 READY   STATUS    RESTARTS   AGE
+deployment-my-app-657c65694c-clv4f   1/1     Running   0          2m41s
+deployment-my-app-657c65694c-dmk6v   1/1     Running   0          2m41s
+deployment-my-app-657c65694c-dnhb5   1/1     Running   0          2m41s
+deployment-my-app-657c65694c-f8jw4   1/1     Running   0          2m41s
+deployment-my-app-657c65694c-hqlgm   1/1     Running   0          2m41s
+deployment-my-app-657c65694c-l4vlv   1/1     Running   0          2m41s
+deployment-my-app-657c65694c-mf5k4   1/1     Running   0          2m41s
+deployment-my-app-657c65694c-pchrx   1/1     Running   0          2m41s
+deployment-my-app-657c65694c-rz7x6   1/1     Running   0          2m41s
+deployment-my-app-657c65694c-sxxpw   1/1     Running   0          2m41s
 
 # Then deploy version 2 of the application
 $ kubectl apply -f app-v2.yaml
+deployment.apps/deployment-my-app configured
 
 # Test the second deployment progress
-$ service=$(minikube service my-app --url)
-$ while sleep 0.1; do curl "$service"; done
+$ ./curl.py apgw.aks.aliez.tw
+Host: deployment-my-app-6b6c54c645-866hl, Version: v2.0.0
+Host: deployment-my-app-6b6c54c645-dj6xt, Version: v2.0.0
+Host: deployment-my-app-657c65694c-l4vlv, Version: v1.0.0
+Host: deployment-my-app-6b6c54c645-rfdzc, Version: v2.0.0
+Host: deployment-my-app-6b6c54c645-5pdjn, Version: v2.0.0
+Host: deployment-my-app-6b6c54c645-8dsbb, Version: v2.0.0
+Host: deployment-my-app-6b6c54c645-vjstv, Version: v2.0.0
+Host: deployment-my-app-657c65694c-dnhb5, Version: v1.0.0
+Host: deployment-my-app-6b6c54c645-9n6c4, Version: v2.0.0
+...omit...
+
 
 # In case you discover some issue with the new version, you can undo the
 # rollout
-$ kubectl rollout undo deploy my-app
+$ kubectl rollout undo deployment/deployment-my-app -n ns-ramped
+deployment.apps/deployment-my-app rolled back
 
 # If you can also pause the rollout if you want to run the application for a
 # subset of users
-$ kubectl rollout pause deploy my-app
+$ kubectl rollout pause deployment/deployment-my-app -n ns-ramped
+deployment.apps/deployment-my-app paused
 
 # Then if you are satisfied with the result, resume rollout
-$ kubectl rollout resume deploy my-app
+$ kubectl rollout resume deployment/deployment-my-app -n ns-ramped
+deployment.apps/deployment-my-app resumed
 ```
+
+### Screen Shot
+
+![Screenshot Ramped](screenshot-ramped.png)
 
 ### Cleanup
 
 ```bash
-$ kubectl delete all -l app=my-app
+$ kubectl delete -f .
+namespace "ns-ramped" deleted
+deployment.apps "deployment-my-app" deleted
+ingress.networking.k8s.io "ingress-ramped" deleted
+service "svc-my-app" deleted
+Error from server (NotFound): error when deleting "app-v2.yaml": deployments.apps "deployment-my-app" not found
 ```

@@ -1,6 +1,6 @@
 # Canary deployment using Istio service mesh
 
-> In the following example, we will use the Istio service mesh to control
+> In the following example, we will use the Istio service mesh provied by Azure to control
 traffic distribution for a canary deployment using an example application
 This is very similar to the Istio A/B testing example, however instead of
 serving a specific subset of clients based on headers, we are simply dividing
@@ -49,8 +49,6 @@ kubectl label namespace/ns-canary-istio istio.io/rev=asm-1-17
 ### Deploy the application
 
 Deploy all of the yaml files in this directory
-
-TODO: Split files and apply/verify seperately
 
 ```bash
 $ kubectl apply -f app-v1.yaml -f app-v2.yaml -f hpa.yaml -f istio.yaml

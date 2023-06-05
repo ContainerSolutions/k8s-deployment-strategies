@@ -1,21 +1,22 @@
-Canary deployment using Kubernetes native functionnalities
-==========================================================
+# Canary deployment using Kubernetes native functionnalities and Azure Application Gateway Ingress Controller
 
-> In the following example we apply the poor man's canary using Kubernetes
-native features (replicas). If you want a finer grained control over traffic
-shifting, check the [nginx-ingress](../nginx-ingress) example which use
-[Nginx](http://nginx.org/) to split traffic or the [a/b testing](../../ab-testing)
-example which shift traffic using [Istio](https://istio.io).
+> In the following example we apply the `poor man's` canary using Kubernetes
+native features (replicas) and Azure Application Gateway Ingress Controller.
+
+If you want a finer grained control over traffic shifting, you can use...
+
+- `nginx-ingress ingress controller` which use [Nginx](http://nginx.org/) to split traffic.
+- [`Istio Ingress Gateways`](../istio-service-mesh-addon) which use [Istio](https://istio.io) to split traffic.
+- [a/b testing](../../ab-testing) which shift traffic using [Istio](https://istio.io).
 
 ## Steps to follow
 
 1. 10 replicas of version 1 is serving traffic
-1. deploy 1 replicas version 2 (meaning ~10% of traffic)
-1. wait enought time to confirm that version 2 is stable and not throwing
-   unexpected errors
-1. scale up version 2 replicas to 10
-1. wait until all instances are ready
-1. shutdown version 1
+2. deploy 1 replicas version 2 (meaning ~10% of traffic)
+3. wait enought time to confirm that version 2 is stable and not throwing unexpected errors
+4. scale up version 2 replicas to 10
+5. wait until all instances are ready
+6. shutdown version 1
 
 ## In practice
 
@@ -50,13 +51,12 @@ deployment-my-app-v1-657c65694c-rsckt   1/1     Running   0          68s
 deployment-my-app-v1-657c65694c-vdvd8   1/1     Running   0          68s
 
 # Then deploy version 2 of the application and scale down version 1 to 9 replicas at same time
-version 2 to 1 replicas (meaning ~10% of traffic) + version 1 to 9 replicas (meaning ~90% of traffic)
+# version 2 to 1 replicas (meaning ~10% of traffic) + version 1 to 9 replicas (meaning ~90% of traffic)
 $ kubectl apply -f app-v2.yaml
 deployment.apps/deployment-my-app-v2 created
 
-$ kubectl scale --replicas=9 deployment/deployment-my-app-v1 -n ns-canry
+$ kubectl scale --replicas=9 deployment/deployment-my-app-v1 -n ns-canary
 deployment.apps/deployment-my-app-v1 scaled
-
 
 # Only one pod with the new version should be running.
 # You can test if the second deployment was successful
@@ -82,14 +82,14 @@ $ kubectl scale --replicas=5 deployment/deployment-my-app-v1 -n ns-canary
 # version 2 to 10 replicas (meaning 100% of traffic) + version 1 to 0 replicas (meaning ~0% of traffic)
 $ kubectl scale --replicas=10 deployment/deployment-my-app-v2 -n ns-canary
 $ kubectl scale --replicas=0 deployment/deployment-my-app-v1 -n ns-canary
-
-# Then, when all pods are running, you can safely delete the old deployment
-$ kubectl delete deployment/deployment-my-app-v1 -n ns-canary
-$ kubectl delete deployment/deployment-my-app-v2 -n ns-canary
 ```
+
+### Screen Shot
+
+![Screenshot canary-50-50](screenshot-canary-50-50.png)
 
 ### Cleanup
 
 ```bash
-$ kubectl delete all -l app=my-app -n ns-canary
+$ kubectl delete -f .
 ```

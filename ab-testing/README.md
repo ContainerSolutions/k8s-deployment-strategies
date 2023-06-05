@@ -1,4 +1,4 @@
-# A/B testing using Istio
+# A/B testing using Istio service mesh
 
 > Version B is released to a subset of users under specific condition.
 
@@ -16,8 +16,8 @@ roll-out the version that converts the most.
 Here is a list of conditions that can be used to distribute traffic amongst the
 versions:
 
-- Weight
-- Cookie value
+- [Weight](https://istio.io/latest/docs/reference/config/networking/virtual-service/#RouteDestination)
+- [Headers](https://istio.io/latest/docs/reference/config/networking/virtual-service/#Headers)
 - Query parameters
 - Geolocalisation
 - Technology support: browser version, screen size, operating system, etc.
@@ -25,11 +25,10 @@ versions:
 
 ## Steps to follow
 
-1. version 1 is serving HTTP traffic using Istio
-1. deploy version 2
-1. wait until all instances are ready
-1. update Istio VirtualService with 90% traffic targetting version 1 and 10%
-   traffic targetting version 2
+1. version 1 is serving HTTP traffic using Istio service mesh
+2. deploy version 2
+3. wait until all instances are ready
+4. update Istio VirtualService with 80% traffic targetting version 1 and 20% traffic targetting version 2
 
 ## In practice
 
@@ -54,14 +53,10 @@ To automatically install sidecar to any new pods, annotate your namespaces:
 
 ```yaml
 # The default istio-injection=enabled labeling doesn't work. Explicit versioning (istio.io/rev=asm-1-17) is required.
-kubectl label namespace/ns-canary-istio istio.io/rev=asm-1-17
+kubectl label namespace/ns-ab-testing istio.io/rev=asm-1-17
 ```
 
 ### Deploy both applications
-
-Back to the a/b testing directory from this repo, deploy both applications using
-the istioctl command to inject the Istio sidecar container which is used to
-proxy requests:
 
 ```bash
 $ kubectl apply -f app-v1.yaml -f app-v2.yaml
@@ -73,8 +68,7 @@ deployment.apps/deployment-my-app-v2 created
 service/my-app-v2 created
 ```
 
-Expose both services via the Istio Gateway and create a VirtualService to match
-requests to the my-app-v1 service:
+Expose both services via the Istio Gateway and create a VirtualService to match requests to the my-app-v1 service:
 
 ```bash
 $ kubectl apply -f ./gateway.yaml -f ./virtualservice-wildcard.yaml
