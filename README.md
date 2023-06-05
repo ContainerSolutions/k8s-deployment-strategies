@@ -18,12 +18,12 @@ to carefully choose the right strategy to make your infrastructure resilient.
   to a full rollout
   - [x] Application Gateway Ingress Controller: Due to the lack of support for traffic weight functionality, we use manually modified replicas count to achieve the same effect.
   - [x] Azure Load Balancer + Istio service mesh
-- [ ] [a/b testing](ab-testing/): release a new version to a subset of users in a precise way (HTTP headers, cookie, weight, etc.). This doesn’t come out of the box with Kubernetes, it imply extra work to setup a smarter loadbalancing system (Istio, Linkerd, Traeffik, custom nginx/haproxy, etc).
-  - [ ] Azure Load Balancer + Istio service mesh
-- [ ] [shadow](shadow/): release a new version alongside the old version. Incoming
+- [x] [a/b testing](ab-testing/): release a new version to a subset of users in a precise way (HTTP headers, cookie, weight, etc.). This doesn’t come out of the box with Kubernetes, it imply extra work to setup a smarter loadbalancing system (Istio, Linkerd, Traeffik, custom nginx/haproxy, etc).
+  - [x] Azure Load Balancer + Istio service mesh
+- [x] [shadow](shadow/): release a new version alongside the old version. Incoming
   traffic is mirrored to the new version and doesn't impact the
   response.
-  - [ ] Azure Load Balancer + Istio service mesh
+  - [x] Azure Load Balancer + Istio service mesh
 
 ![deployment strategy decision diagram](decision-diagram.png)
 

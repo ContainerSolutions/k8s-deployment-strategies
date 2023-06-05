@@ -1,14 +1,16 @@
+---
 apiVersion: networking.istio.io/v1alpha3
 kind: Gateway
 metadata:
-  name: my-app
-  labels:
-    app: my-app
+  namespace: ns-shadow
+  name: istio-http-gateway
 spec:
+  selector:
+    istio: aks-istio-ingressgateway-external
   servers:
     - port:
         number: 80
         name: http
         protocol: HTTP
       hosts:
-        - my-app.local
+        - "*"

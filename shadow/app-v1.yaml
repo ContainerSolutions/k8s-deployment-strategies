@@ -1,22 +1,16 @@
+---
 apiVersion: v1
-kind: Service
+kind: Namespace
 metadata:
-  name: my-app-v1
+  name: ns-shadow
   labels:
-    app: my-app
-spec:
-  ports:
-  - name: http
-    port: 80
-    targetPort: http
-  selector:
-    app: my-app
-    version: v1.0.0
+    istio.io/rev: asm-1-17
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: my-app-v1
+  namespace: ns-shadow
+  name: deployment-my-app-v1
   labels:
     app: my-app
 spec:
@@ -36,6 +30,7 @@ spec:
         prometheus.io/path: "/metrics"
         prometheus.io/scheme: "http"
     spec:
+      terminationGracePeriodSeconds: 100
       containers:
       - name: my-app
         image: containersol/k8s-deployment-strategies
@@ -58,3 +53,23 @@ spec:
             path: /ready
             port: probe
           periodSeconds: 5
+        lifecycle:
+          preStop:
+            exec:
+              command: ["sleep","90"]
+---
+apiVersion: v1
+kind: Service
+metadata:
+  namespace: ns-shadow
+  name: svc-my-app-v1
+  labels:
+    app: my-app
+spec:
+  ports:
+  - name: http
+    port: 80
+    targetPort: http
+  selector:
+    app: my-app
+    version: v1.0.0

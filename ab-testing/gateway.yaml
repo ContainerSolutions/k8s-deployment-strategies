@@ -4,8 +4,6 @@ kind: Gateway
 metadata:
   namespace: ns-ab-testing
   name: istio-http-gateway
-  # labels:
-  #   app: my-app
 spec:
   selector:
     istio: aks-istio-ingressgateway-external

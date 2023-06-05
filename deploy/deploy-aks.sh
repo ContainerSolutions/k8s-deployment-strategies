@@ -138,6 +138,14 @@ time az aks mesh enable-ingress-gateway --resource-group ${RESOURCE_GROUP} \
 
 
 #
+# Step 6: Get AKS Credentials
+#
+az aks get-credentials --resource-group ${RESOURCE_GROUP} \
+  --name ${AKS_CLUSTER_NAME} \
+  --file ./kubeconfig_${AKS_CLUSTER_NAME}
+
+
+#
 # (Optional) Azure Container Insight: Create Log Analytics workspace
 # https://learn.microsoft.com/en-us/cli/azure/monitor/log-analytics/workspace?view=azure-cli-latest#az-monitor-log-analytics-workspace-create
 #
@@ -152,17 +160,17 @@ time az aks mesh enable-ingress-gateway --resource-group ${RESOURCE_GROUP} \
 #
 # Wipe Resource Group
 #
-# az group delete --name rg-POC-Mendix --yes --no-wait
+# az group delete --name ${RESOURCE_GROUP} --yes --no-wait
 
 
 # Import kubeconfig to Bastion
-# [cloudshell]$ az aks get-credentials --resource-group rg-POC-Mendix --name mendix-poc-aks --file ./kubeconfig_mendix
-# [cloudshell]$ scp -P 5566 ./kubeconfig_mendix repairman@20.24.221.253:/home/repairman/kubeconfig_mendix
-# [cloudshell]$ ssh repairman@20.24.221.253 -p5566
-# [bastion]$ export KUBECONFIG=/home/repairman/kubeconfig_mendix
+# [cloudshell]$ az aks get-credentials --resource-group rg-poc-aks --name poc-aks --file ./kubeconfig_poc-aks
+# [cloudshell]$ scp -P 5566 ./kubeconfig_poc-aks repairman@x.x.x.x:/home/repairman/kubeconfig_poc-aks
+# [cloudshell]$ ssh repairman@x.x.x.x -p5566
+# [bastion]$ export KUBECONFIG=/home/repairman/kubeconfig_poc-aks
 # [bastion]$ kubectl cluster-info
 #
-# Kubernetes control plane is running at https://mendix-poc-aks-tf1td1fa.mendix.privatelink.eastasia.azmk8s.io:443
-# CoreDNS is running at https://mendix-poc-aks-tf1td1fa.mendix.privatelink.eastasia.azmk8s.io:443/api/v1/namespaces/kube-system/services/kube-dns:dns/proxy
-# Metrics-server is running at https://mendix-poc-aks-tf1td1fa.mendix.privatelink.eastasia.azmk8s.io:443/api/v1/namespaces/kube-system/services/https:metrics-server:/proxy
+# Kubernetes control plane is running at https://poc-aks-4iuoo1vw.hcp.eastus.azmk8s.io:443
+# CoreDNS is running at https://poc-aks-4iuoo1vw.hcp.eastus.azmk8s.io:443/api/v1/namespaces/kube-system/services/kube-dns:dns/proxy
+# Metrics-server is running at https://poc-aks-4iuoo1vw.hcp.eastus.azmk8s.io:443/api/v1/namespaces/kube-system/services/https:metrics-server:/proxy
 #

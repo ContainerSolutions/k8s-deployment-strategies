@@ -3,7 +3,7 @@ apiVersion: networking.istio.io/v1alpha3
 kind: VirtualService
 metadata:
   namespace: ns-shadow
-  name: vs-mirror-my-app
+  name: vs-wildcard-my-app
   labels:
     app: my-app
 spec:
@@ -15,7 +15,3 @@ spec:
     - route:
       - destination:
           host: svc-my-app-v1
-
-      # Mirror traffic to v2.0.0
-      mirror:
-        host: svc-my-app-v2
