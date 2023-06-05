@@ -66,9 +66,17 @@ To have a better overview of the version, add `{{version}}` in the legend field.
 
 ## Curl script
 
+### Before you begin
+
+```bash
+pip3 install colorama
+```
+
+### Usage
+
 This is a Python script that makes HTTP requests to a web link specified by the provided AIGC-PUBLIC-IP address. The script uses the requests library to send GET requests to the specified URL. It has error handling mechanisms to handle different types of exceptions that might occur during the request.
 
-```dotnetcli
+```bash
 ./curl.py AIGC-PUBLIC-IP
 ```
 

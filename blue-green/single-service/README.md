@@ -23,7 +23,8 @@ ingress.networking.k8s.io/ingress-bluegreen created
 service/svc-my-app created
 
 # Test if the deployment was successful
-$ curl.py AGIC-PUBLIC-IP
+$ export AGIC-PUBLIC-IP="apgw.aks.aliez.tw"
+$ curl.py $AGIC-PUBLIC-IP
 Host: deployment-my-app-v1-657c65694c-jg4hn, Version: v1.0.0
 Host: deployment-my-app-v1-657c65694c-s77mq, Version: v1.0.0
 Host: deployment-my-app-v1-657c65694c-62w74, Version: v1.0.0
@@ -61,7 +62,8 @@ $ kubectl patch service/svc-my-app -n ns-bluegreen -p '{"spec":{"selector":{"ver
 service/svc-my-app patched
 
 # Test if the second deployment was successful
-$ curl.py AGIC-PUBLIC-IP
+$ export AGIC-PUBLIC-IP="apgw.aks.aliez.tw"
+$ curl.py $AGIC-PUBLIC-IP
 ...omit...
 Host: deployment-my-app-v1-657c65694c-s77mq, Version: v1.0.0
 Host: deployment-my-app-v1-657c65694c-s77mq, Version: v1.0.0
