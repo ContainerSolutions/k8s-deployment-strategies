@@ -141,4 +141,12 @@ $ kubectl delete -f ./app-a-v1.yaml -f ./app-b-v1.yaml
 
 ```bash
 $ kubectl delete all -l app=my-app -n ns-bluegreen
+service "svc-my-app-a-v1" deleted
+service "svc-my-app-a-v2" deleted
+service "svc-my-app-b-v1" deleted
+service "svc-my-app-b-v2" deleted
+deployment.apps "deployment-my-app-a-v1" deleted
+deployment.apps "deployment-my-app-a-v2" deleted
+deployment.apps "deployment-my-app-b-v1" deleted
+deployment.apps "deployment-my-app-b-v2" deleted
 ```
