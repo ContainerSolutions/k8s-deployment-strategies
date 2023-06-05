@@ -1,7 +1,9 @@
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: my-app
+  namespace: ns-ramped
+  name: deployment-my-app
   labels:
     app: my-app
 spec:
@@ -37,7 +39,10 @@ spec:
       annotations:
         prometheus.io/scrape: "true"
         prometheus.io/port: "9101"
+        prometheus.io/path: "/metrics"
+        prometheus.io/scheme: "http"
     spec:
+      terminationGracePeriodSeconds: 100
       containers:
       - name: my-app
         image: containersol/k8s-deployment-strategies
@@ -64,3 +69,7 @@ spec:
           # visibility of the ramped deployment
           initialDelaySeconds: 15
           periodSeconds: 5
+        lifecycle:
+          preStop:
+            exec:
+              command: ["sleep","90"]

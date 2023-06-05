@@ -64,6 +64,16 @@ interval of `1m` so the range cannot be lower than that.
 
 To have a better overview of the version, add `{{version}}` in the legend field.
 
+## Curl script
+
+This is a Python script that makes HTTP requests to a web link specified by the provided AIGC-PUBLIC-IP address. The script uses the requests library to send GET requests to the specified URL. It has error handling mechanisms to handle different types of exceptions that might occur during the request.
+
+```dotnetcli
+./curl.py AIGC-PUBLIC-IP
+```
+
+The script continues to run indefinitely, making periodic requests to the web link and monitoring for errors.
+
 ## Example graph
 
 Recreate:

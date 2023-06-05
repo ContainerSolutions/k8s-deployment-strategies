@@ -30,6 +30,7 @@ spec:
         prometheus.io/path: "/metrics"
         prometheus.io/scheme: "http"
     spec:
+      terminationGracePeriodSeconds: 100
       containers:
       - name: my-app
         image: containersol/k8s-deployment-strategies
@@ -52,3 +53,7 @@ spec:
             path: /ready
             port: probe
           periodSeconds: 5
+        lifecycle:
+          preStop:
+            exec:
+              command: ["sleep","90"]

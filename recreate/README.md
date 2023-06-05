@@ -39,6 +39,10 @@ deployment-my-app-6888dcf989-d8zsc   1/1     Running   0          94s
 deployment-my-app-6888dcf989-m72j5   1/1     Running   0          94s
 deployment-my-app-6888dcf989-rtd7x   1/1     Running   0          94s
 
+
+# Then deploy version 2 of the application
+$ kubectl apply -f app-v2.yaml
+
 # Test the second deployment progress
 $ while sleep 0.1; do curl http://AGIC-PUBLIC-IP; done
 Host: deployment-my-app-6888dcf989-m72j5, Version: v1.0.0
@@ -48,12 +52,12 @@ Host: deployment-my-app-6888dcf989-d8zsc, Version: v1.0.0
 Host: deployment-my-app-6888dcf989-m72j5, Version: v1.0.0
 Host: deployment-my-app-6888dcf989-rtd7x, Version: v1.0.0
 ...omit...
-
-
-# Then deploy version 2 of the application
-$ kubectl apply -f app-v2.yaml
-
-
+Host: deployment-my-app-9bbbfc995-bnh6k, Version: v2.0.0
+Host: deployment-my-app-9bbbfc995-k8jbp, Version: v2.0.0
+Host: deployment-my-app-9bbbfc995-8vksv, Version: v2.0.0
+Host: deployment-my-app-9bbbfc995-k8jbp, Version: v2.0.0
+Host: deployment-my-app-9bbbfc995-bnh6k, Version: v2.0.0
+Host: deployment-my-app-9bbbfc995-8vksv, Version: v2.0.0
 ```
 
 ### Cleanup
