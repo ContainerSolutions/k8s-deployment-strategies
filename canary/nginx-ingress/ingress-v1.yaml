@@ -1,16 +1,23 @@
-apiVersion: extensions/v1beta1
+---
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: my-app
+  namespace: ns-canary
+  name: ingress-canary
   labels:
     app: my-app
   annotations:
-    kubernetes.io/ingress.class: "nginx"
+    kubernetes.io/ingress.class: azure/application-gateway
+    appgw.ingress.kubernetes.io/connection-draining: "true"
+    appgw.ingress.kubernetes.io/connection-draining-timeout: "30"
 spec:
   rules:
-  - host: my-app.com
-    http:
+  - http:
       paths:
-      - backend:
-          serviceName: my-app-v1
-          servicePort: 80
+      - path: /
+        pathType: Exact
+        backend:
+          service:
+            name: svc-my-app-v1
+            port:
+              number: 80

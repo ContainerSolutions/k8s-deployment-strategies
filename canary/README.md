@@ -17,9 +17,13 @@ platform.
 adjusting the number of replicas or if you use Nginx as Ingress controller you
 can define fine grained traffic splitting via Ingress annotations.**
 
-- [native](native/)
+- [NodePort](NodePort/)
 - [nginx-ingress](nginx-ingress/)
 
 *If you use Helm to deploy applications, the following repository demonstrate
 how to make a [canary deployment using Istio and
 Helm](https://github.com/etiennetremel/istio-cross-namespace-canary-release-demo).*
+
+## Limitation
+
+- Application Gateway Ingress Controller doesn't support Canary deployment.

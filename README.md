@@ -3,17 +3,26 @@
 > In Kubernetes there are a few different ways to release an application, you have
 to carefully choose the right strategy to make your infrastructure resilient.
 
-- [x] [recreate](recreate/): terminate the old version and release the new one
-- [x] [ramped](ramped/): release a new version on a rolling update fashion, one
+- [ ] [recreate](recreate/): terminate the old version and release the new one
+  - [x] Application Gateway Ingress Controller
+  - [ ] Azure Load Balancer + Istio service mesh
+  - [ ] Azure Load Balancer + Ingress-Nginx Controller
+- [ ] [ramped](ramped/): release a new version on a rolling update fashion, one
   after the other
-- [x] [blue/green](blue-green/): release a new version alongside the old version
+  - [x] Application Gateway Ingress Controller
+  - [ ] Azure Load Balancer + Istio service mesh
+  - [ ] Azure Load Balancer + Ingress-Nginx Controller
+- [ ] [blue/green](blue-green/): release a new version alongside the old version
   then switch traffic
+  - [x] Application Gateway Ingress Controller
+  - [x] Azure Load Balancer + Istio service mesh
+  - [ ] Azure Load Balancer + Ingress-Nginx Controller
 - [ ] [canary](canary/): release a new version to a subset of users, then proceed
   to a full rollout
-- [ ] [a/b testing](ab-testing/): release a new version to a subset of users in a
-  precise way (HTTP headers, cookie, weight, etc.). This doesn’t come out of the
-  box with Kubernetes, it imply extra work to setup a smarter
-  loadbalancing system (Istio, Linkerd, Traeffik, custom nginx/haproxy, etc).
+  - [x] Application Gateway Ingress Controller: Due to the lack of support for traffic weight functionality, we use manually modified replicas count to achieve the same effect.
+  - [ ] Azure Load Balancer + Istio service mesh
+  - [ ] Azure Load Balancer + Ingress-Nginx Controller
+- [ ] [a/b testing](ab-testing/): release a new version to a subset of users in a precise way (HTTP headers, cookie, weight, etc.). This doesn’t come out of the box with Kubernetes, it imply extra work to setup a smarter loadbalancing system (Istio, Linkerd, Traeffik, custom nginx/haproxy, etc).
 - [ ] [shadow](shadow/): release a new version alongside the old version. Incoming
   traffic is mirrored to the new version and doesn't impact the
   response.
@@ -34,7 +43,8 @@ Before experimenting, checkout the following resources:
 These examples were created and tested on
 
 - Azure Kubernetes Service v1.26.3
-- Azure Application Gateway Ingress Controller (AGIC)
+- Azure Service Mesh (Istio Service Mesh) v1.17
+- Azure Application Gateway Ingress Controller (AGIC) Standard v2
 - Azure Monitor managed service for Prometheus
 - Azure Monitor managed service for Grafana v9.4.10 (5e7d575327)
 

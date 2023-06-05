@@ -1,10 +1,12 @@
+---
 apiVersion: networking.istio.io/v1alpha3
 kind: Gateway
 metadata:
-  name: http-gateway
+  namespace: ns-canary-istio
+  name: istio-http-gateway
 spec:
   selector:
-    istio: ingressgateway
+    istio: aks-istio-ingressgateway-external
   servers:
   - port:
       number: 80
@@ -16,35 +18,37 @@ spec:
 apiVersion: networking.istio.io/v1alpha3
 kind: VirtualService
 metadata:
-  name: my-app
+  namespace: ns-canary-istio
+  name: vs-my-app
 spec:
   hosts:
     - "*"
   gateways:
-    - http-gateway
+    - istio-http-gateway
   http:
   - route:
     - destination:
-        host: my-app
-        subset: v1
+        host: svc-my-app
+        subset: ds-v1
         port:
           number: 80
-      weight: 90
+      weight: 0
     - destination:
-        host: my-app
-        subset: v2
+        host: svc-my-app
+        subset: ds-v2
         port:
           number: 80
-      weight: 10
+      weight: 100
 ---
 apiVersion: networking.istio.io/v1alpha3
 kind: DestinationRule
 metadata:
+  namespace: ns-canary-istio
   name: my-app
 spec:
-  host: my-app
+  host: '*'
   subsets:
-  - name: v1
+  - name: ds-v1
     labels:
       version: v1.0.0
     trafficPolicy:
@@ -53,12 +57,9 @@ spec:
           httpCookie:
             name: user
             ttl: 0s
-  - name: v2
+  - name: ds-v2
     labels:
       version: v2.0.0
     trafficPolicy:
       loadBalancer:
-        consistentHash:
-          httpCookie:
-            name: user
-            ttl: 0s
+        simple: LEAST_REQUEST

@@ -1,25 +1,27 @@
 apiVersion: autoscaling/v1
 kind: HorizontalPodAutoscaler
 metadata:
-  name: my-app-v1
+  namespace: ns-canary-istio
+  name: hpa-my-app-v1
 spec:
   maxReplicas: 10
   minReplicas: 1
   scaleTargetRef:
-    apiVersion: extensions/v1beta1
+    apiVersion: apps/v1
     kind: Deployment
-    name: my-app-v1
+    name: deployment-my-app-v1
   targetCPUUtilizationPercentage: 50
 ---
 apiVersion: autoscaling/v1
 kind: HorizontalPodAutoscaler
 metadata:
-  name: my-app-v2
+  namespace: ns-canary-istio
+  name: hpa-my-app-v2
 spec:
   maxReplicas: 10
   minReplicas: 1
   scaleTargetRef:
-    apiVersion: extensions/v1beta1
+    apiVersion: apps/v1
     kind: Deployment
-    name: my-app-v2
+    name: deployment-my-app-v2
   targetCPUUtilizationPercentage: 50

@@ -1,22 +1,16 @@
+---
 apiVersion: v1
-kind: Service
+kind: Namespace
 metadata:
-  name: my-app
+  name: ns-canary-istio
   labels:
-    app: my-app
-spec:
-  type: NodePort
-  ports:
-  - name: http
-    port: 80
-    targetPort: http
-  selector:
-    app: my-app
+    istio.io/rev: asm-1-17
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: my-app-v1
+  namespace: ns-canary-istio
+  name: deployment-my-app-v2
   labels:
     app: my-app
 spec:
@@ -24,16 +18,19 @@ spec:
   selector:
     matchLabels:
       app: my-app
-      version: v1.0.0
+      version: v2.0.0
   template:
     metadata:
       labels:
         app: my-app
-        version: v1.0.0
+        version: v2.0.0
       annotations:
         prometheus.io/scrape: "true"
         prometheus.io/port: "9101"
+        prometheus.io/path: "/metrics"
+        prometheus.io/scheme: "http"
     spec:
+      terminationGracePeriodSeconds: 100
       containers:
       - name: my-app
         image: containersol/k8s-deployment-strategies
@@ -44,7 +41,7 @@ spec:
           containerPort: 8086
         env:
         - name: VERSION
-          value: v1.0.0
+          value: v2.0.0
         livenessProbe:
           httpGet:
             path: /live
@@ -59,3 +56,7 @@ spec:
         resources:
           requests:
             cpu: 5m
+        lifecycle:
+          preStop:
+            exec:
+              command: ["sleep","90"]

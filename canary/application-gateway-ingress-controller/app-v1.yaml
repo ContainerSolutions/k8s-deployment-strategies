@@ -8,20 +8,20 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   namespace: ns-canary
-  name: deployment-my-app-v2
+  name: deployment-my-app-v1
   labels:
     app: my-app
 spec:
-  replicas: 1
+  replicas: 10
   selector:
     matchLabels:
       app: my-app
-      version: v2.0.0
+      version: v1.0.0
   template:
     metadata:
       labels:
         app: my-app
-        version: v2.0.0
+        version: v1.0.0
       annotations:
         prometheus.io/scrape: "true"
         prometheus.io/port: "9101"
@@ -39,7 +39,7 @@ spec:
           containerPort: 8086
         env:
         - name: VERSION
-          value: v2.0.0
+          value: v1.0.0
         livenessProbe:
           httpGet:
             path: /live
@@ -59,7 +59,8 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: svc-my-app-v2
+  namespace: ns-canary
+  name: svc-my-app
   labels:
     app: my-app
 spec:
@@ -70,4 +71,26 @@ spec:
     targetPort: http
   selector:
     app: my-app
-    version: v2.0.0
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  namespace: ns-canary
+  name: ingress-canary
+  labels:
+    app: my-app
+  annotations:
+    kubernetes.io/ingress.class: azure/application-gateway
+    appgw.ingress.kubernetes.io/connection-draining: "true"
+    appgw.ingress.kubernetes.io/connection-draining-timeout: "30"
+spec:
+  rules:
+  - http:
+      paths:
+      - path: /
+        pathType: Exact
+        backend:
+          service:
+            name: svc-my-app
+            port:
+              number: 80

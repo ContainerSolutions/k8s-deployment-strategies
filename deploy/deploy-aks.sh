@@ -105,8 +105,9 @@ time az aks create -n ${AKS_CLUSTER_NAME} -g ${RESOURCE_GROUP_NAME} -l ${LOCATIO
   --network-policy ${NETWORK_POLICY} \
   --vnet-subnet-id /subscriptions/${SUBSCRIPTION_ID}/resourceGroups/${RESOURCE_GROUP_NAME}/providers/Microsoft.Network/virtualNetworks/${VNET_NAME}/subnets/${SUBNET_NODE_NAME} \
   --pod-subnet-id /subscriptions/${SUBSCRIPTION_ID}/resourceGroups/${RESOURCE_GROUP_NAME}/providers/Microsoft.Network/virtualNetworks/${VNET_NAME}/subnets/${SUBNET_POD_NAME} \
-  --enable-addons ingress-appgw \
+  --enable-azure-service-mesh \
   --enable-azuremonitormetrics \
+  --enable-addons ingress-appgw \
   --appgw-name ${AGIC_NAME} \
   --appgw-subnet-id /subscriptions/${SUBSCRIPTION_ID}/resourceGroups/${RESOURCE_GROUP_NAME}/providers/Microsoft.Network/virtualNetworks/${VNET_NAME}/subnets/${SUBNET_AGIC_NAME}
 
@@ -127,24 +128,25 @@ time az network application-gateway update -n ${AGIC_NAME} -g ${AKS_RESOURCE_GRO
   --sku Standard_v2 \
   --capacity 1 \
 
+#
+# Step 5: Enable Ingress Gateway for Istio Service Mesh
+#
+
+time az aks mesh enable-ingress-gateway --resource-group ${RESOURCE_GROUP} \
+  --name ${AKS_CLUSTER_NAME} \
+  --ingress-gateway-type external
+
 
 #
-# Azure Container Insight: Create Log Analytics workspace
+# (Optional) Azure Container Insight: Create Log Analytics workspace
 # https://learn.microsoft.com/en-us/cli/azure/monitor/log-analytics/workspace?view=azure-cli-latest#az-monitor-log-analytics-workspace-create
-
-time az monitor log-analytics workspace create -g ${RESOURCE_GROUP_NAME} -l ${LOCATION} \
-    --workspace-name ${LOG_ANALYTICS_WORKSPACE_NAME} \
-    --sku ${LOG_ANALYTICS_WORKSPACE_SKU} \
-    --ingestion-access Enabled \
-    --retention-time 14 \
-    --query-access Enabled
-
-
-
-
-# Show link
-
-#       "prometheusQueryEndpoint": "https://amw-poc1-aks-g8ux.eastus.prometheus.monitor.azure.com"
+#
+# time az monitor log-analytics workspace create -g ${RESOURCE_GROUP_NAME} -l ${LOCATION} \
+#     --workspace-name ${LOG_ANALYTICS_WORKSPACE_NAME} \
+#     --sku ${LOG_ANALYTICS_WORKSPACE_SKU} \
+#     --ingestion-access Enabled \
+#     --retention-time 14 \
+#     --query-access Enabled
 
 
 #
