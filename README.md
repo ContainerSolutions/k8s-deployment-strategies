@@ -57,7 +57,7 @@ Before experimenting, checkout the following resources:
 These examples were created and tested on
 
 |                       Azure Service                      | Azure Support Status |        Version       |
-|:--------------------------------------------------------:|:-----------------:|----------------------|
+|----------------------------------------------------------|:-----------------:|----------------------|
 | [Azure Kubernetes Service][9]                            | GA                | v1.26.3              |
 | [Azure Service Mesh (a.k.a Istio Service Mesh)][2]       | Preview           | v1.17                |
 | [Azure Application Gateway Ingress Controller (AGIC)][3] | GA                | Standard_v2          |
