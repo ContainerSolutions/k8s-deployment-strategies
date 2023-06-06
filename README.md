@@ -16,7 +16,7 @@ to carefully choose the right strategy to make Microsoft Azure infrastructure re
   - [ ] Azure Load Balancer + Istio service mesh
 - [x] [canary](canary/): release a new version to a subset of users, then proceed
   to a full rollout
-  - [x] Application Gateway Ingress Controller: Due to the lack of support for traffic weight functionality, we use manually modified replicas count to achieve the same effect.
+  - [x] Application Gateway Ingress Controller
   - [x] Azure Load Balancer + Istio service mesh
 - [x] [a/b testing](ab-testing/): release a new version to a subset of users in a precise way (HTTP headers, cookie, weight, etc.). This doesn’t come out of the box with Kubernetes, it imply extra work to setup a smarter loadbalancing system (Istio, Linkerd, Traeffik, custom nginx/haproxy, etc).
   - [x] Azure Load Balancer + Istio service mesh
@@ -39,16 +39,16 @@ Before experimenting, checkout the following resources:
 - [Canary deployment using Istio and Helm](https://github.com/etiennetremel/istio-cross-namespace-canary-release-demo)
 - [Automated rollback of Helm releases based on logs or metrics](https://container-solutions.com/automated-rollback-helm-releases-based-logs-metrics/)
 
-## Azure Kubernetes Service (AKS) Deployment Strategy Support Matrix
+## Support Strategy Matrix for Kubernetes Application Deployment on Azure Kubernetes Service
 
-|   Strategy  |      Use AGIC     | Use Istio Service Mesh? |                               Note                               |
-|:-----------:|:-----------------:|:-----------------------:|:----------------------------------------------------------------:|
+|   Strategy  | Use Applicationg Gateway Ingress Controller | Use Istio Service Mesh |                               Note                               |
+|:-----------:|:-----------------:|:-----------------------:|----------------------------------------------------------------|
 | Recreate    |        Yes        |           Yes           | Regardless of whether the Ingress Controller is selected or not. |
-| Ramped      |        Yes        |           Yes           | Regardless of whether the Ingress Controller is selected or not. |
-| Blue/Green  |        Yes        |           Yes           | Regardless of whether the Ingress Controller is selected or not. |
-| Canary      | Yes, but manually |           Yes           | Ingress controller is required to work in conjunction.           |
-| A/B Testing |         No        |           Yes           | Ingress controller is required to work in conjunction.           |
-| Shadow      |         No        |           Yes           | Ingress controller is required to work in conjunction.           |
+| Ramped      |        Yes        |           Yes           | One of the key functionalities of [Kubernetes Deployment][8]. |
+| Blue/Green  |        Yes        |           Yes           | At the Kubernetes Deployment level, it is archieved by switching Kubernetes services. At the Kubernetes Cluster level, it is accomplished by utilizing Azure Traffic Manager or Azure FrontDoor for switching. |
+| Canary      | Yes, but manually |           Yes           | Manually adjusting the number of replicas within the Kubernetes Deployment, or utilizing an Ingress Controller that supports the Traffic Shifting mechanism. |
+| A/B Testing |         No        |           Yes           | The ingress controller needs to have a rule match mechanism (e.g. HTTP headers, cookie, weight, etc.) to determine the direction of traffic. |
+| Shadow      |         No        |           Yes           | Currently, achieving this requires the use of a service mesh such as Istio. |
 
 ## Getting started
 
@@ -168,3 +168,4 @@ Strong recommendation to read [Minimizing Downtime During Deployments](https://a
 [5]: https://github.com/pichuang/k8s-deployment-strategies-azure-edition/blob/master/ramped/app-v1.yaml#L30
 [6]: https://github.com/pichuang/k8s-deployment-strategies-azure-edition/blob/master/ramped/app-v1.yaml#L53-L56
 [7]: https://github.com/pichuang/k8s-deployment-strategies-azure-edition/blob/master/ramped/app-v1.yaml#L65-L66
+[8]: https://kubernetes.io/docs/concepts/workloads/controllers/deployment/#use-case
