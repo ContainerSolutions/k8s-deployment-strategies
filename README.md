@@ -56,11 +56,13 @@ Before experimenting, checkout the following resources:
 
 These examples were created and tested on
 
-- Azure Kubernetes Service v1.26.3
-- [Azure Service Mesh (a.k.a Istio Service Mesh)][2] v1.17
-- [Azure Application Gateway Ingress Controller (AGIC)][3] Standard v2
-- [Azure Monitor managed service for Prometheus][1]
-- [Azure Managed Grafana][4] v9.4.10 (5e7d575327)
+|                       Azure Service                      | Azure Support Status |        Version       |
+|:--------------------------------------------------------:|:-----------------:|----------------------|
+| [Azure Kubernetes Service][9]                            | GA                | v1.26.3              |
+| [Azure Service Mesh (a.k.a Istio Service Mesh)][2]       | Preview           | v1.17                |
+| [Azure Application Gateway Ingress Controller (AGIC)][3] | GA                | Standard_v2          |
+| [Azure Monitor managed service for Prometheus][1]        | GA                |                      |
+| [Azure Managed Grafana][4]                               | GA                | v9.4.10 (5e7d575327) |
 
 ```bash
 $ cd ./deploy
@@ -168,4 +170,5 @@ Strong recommendation to read [Minimizing Downtime During Deployments](https://a
 [5]: https://github.com/pichuang/k8s-deployment-strategies-azure-edition/blob/master/ramped/app-v1.yaml#L30
 [6]: https://github.com/pichuang/k8s-deployment-strategies-azure-edition/blob/master/ramped/app-v1.yaml#L53-L56
 [7]: https://github.com/pichuang/k8s-deployment-strategies-azure-edition/blob/master/ramped/app-v1.yaml#L65-L66
-[8]: https://kubernetes.io/docs/concepts/workloads/controllers/deployment/#use-case
+[8]: https://kubernetes.io/docs/concepts/workloads/controllers/deployment/#strategy
+[9]: https://learn.microsoft.com/en-us/azure/aks/
