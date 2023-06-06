@@ -78,14 +78,15 @@ time az resource create -g ${RESOURCE_GROUP_NAME} -l ${LOCATION} \
 #
 # Step 4: Link to Grafana Instance
 #
+
 time az grafana create -g ${RESOURCE_GROUP_NAME} -l ${LOCATION} \
     --name ${GRAFANA_NAME}
 
 #
-# Step 3: Azure Kubernetes Service (AKS)
+# Step 5: Azure Kubernetes Service (AKS)
 # Creation: 5 ~ 10m
 # https://docs.microsoft.com/en-us/cli/azure/aks?view=azure-cli-latest#az-aks-create
-
+#
 
 time az aks create -n ${AKS_CLUSTER_NAME} -g ${RESOURCE_GROUP_NAME} -l ${LOCATION} \
   --kubernetes-version ${KUBERNETES_VERSION} \
@@ -120,16 +121,17 @@ if [ -z "$AKS_RESOURCE_GROUPNAME" ]; then
 fi
 
 #
-# Step 4:  Update existing Application Gateway
+# Step 6:  Update existing Application Gateway
 #
 # https://learn.microsoft.com/en-us/cli/azure/network/application-gateway?view=azure-cli-latest#az-network-application-gateway-update
+#
 
 time az network application-gateway update -n ${AGIC_NAME} -g ${AKS_RESOURCE_GROUPNAME} \
   --sku Standard_v2 \
   --capacity 1 \
 
 #
-# Step 5: Enable Ingress Gateway for Istio Service Mesh
+# Step 7: Enable Ingress Gateway for Istio Service Mesh
 #
 
 time az aks mesh enable-ingress-gateway --resource-group ${RESOURCE_GROUP} \
@@ -138,8 +140,9 @@ time az aks mesh enable-ingress-gateway --resource-group ${RESOURCE_GROUP} \
 
 
 #
-# Step 6: Get AKS Credentials
+# Step 8: Get AKS Credentials
 #
+
 az aks get-credentials --resource-group ${RESOURCE_GROUP} \
   --name ${AKS_CLUSTER_NAME} \
   --file ./kubeconfig_${AKS_CLUSTER_NAME}
@@ -158,7 +161,7 @@ az aks get-credentials --resource-group ${RESOURCE_GROUP} \
 
 
 #
-# Wipe Resource Group
+# Step 999: Wipe Resource Group
 #
 # az group delete --name ${RESOURCE_GROUP} --yes --no-wait
 
