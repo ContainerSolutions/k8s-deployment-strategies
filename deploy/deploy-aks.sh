@@ -151,8 +151,17 @@ az aks get-credentials --admin --resource-group ${RESOURCE_GROUP_NAME} \
 # Step 9: Apply prometheus config
 #
 
-kubectl apply -f ama-metrics-prometheus-config.yml
-kubectl apply -f ama-metrics-settings-configmap.yml
+az aks command invoke \
+  --resource-group ${RESOURCE_GROUP_NAME} \
+  --name ${AKS_CLUSTER_NAME} \
+  --command "kubectl apply -f ama-metrics-prometheus-config.yml" \
+  --file ama-metrics-prometheus-config.yml
+
+az aks command invoke \
+  --resource-group ${RESOURCE_GROUP_NAME} \
+  --name ${AKS_CLUSTER_NAME} \
+  --command "kubectl apply -f ama-metrics-settings-configmap.yml" \
+  --file ama-metrics-settings-configmap.yml
 
 #
 # Step 10: Show Information
