@@ -134,7 +134,7 @@ time az network application-gateway update -n ${AGIC_NAME} -g ${AKS_RESOURCE_GRO
 # Step 7: Enable Ingress Gateway for Istio Service Mesh
 #
 
-time az aks mesh enable-ingress-gateway --resource-group ${RESOURCE_GROUP} \
+time az aks mesh enable-ingress-gateway --resource-group ${RESOURCE_GROUP_NAME} \
   --name ${AKS_CLUSTER_NAME} \
   --ingress-gateway-type external
 
@@ -143,7 +143,7 @@ time az aks mesh enable-ingress-gateway --resource-group ${RESOURCE_GROUP} \
 # Step 8: Get AKS Credentials
 #
 
-az aks get-credentials --resource-group ${RESOURCE_GROUP} \
+az aks get-credentials --resource-group ${RESOURCE_GROUP_NAME} \
   --name ${AKS_CLUSTER_NAME} \
   --file ./kubeconfig_${AKS_CLUSTER_NAME}
 
