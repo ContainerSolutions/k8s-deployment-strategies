@@ -1,3 +1,4 @@
 app/vendor
 .DS_Store
 .vscode/settings.json
+deploy/kubeconfig_poc-aks

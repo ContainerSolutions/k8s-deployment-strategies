@@ -143,10 +143,32 @@ time az aks mesh enable-ingress-gateway --resource-group ${RESOURCE_GROUP_NAME} 
 # Step 8: Get AKS Credentials
 #
 
-az aks get-credentials --resource-group ${RESOURCE_GROUP_NAME} \
+az aks get-credentials --admin --resource-group ${RESOURCE_GROUP_NAME} \
   --name ${AKS_CLUSTER_NAME} \
   --file ./kubeconfig_${AKS_CLUSTER_NAME}
 
+#
+# Step 9: Apply prometheus config
+#
+
+kubectl apply -f ama-metrics-prometheus-config.yml
+kubectl apply -f ama-metrics-settings-configmap.yml
+
+#
+# Step 10: Show Information
+#
+
+APPGW_PIP=$(az network public-ip show --name ${AGIC_NAME}-appgwpip --resource-group ${AKS_RESOURCE_GROUPNAME} --query "ipAddress" -o tsv)
+
+GRAFANA_URL=$(az grafana show -g ${RESOURCE_GROUP_NAME} -n ${GRAFANA_NAME} --query "properties.endpoint" -o tsv)
+
+ISTIO_INGRESS_GATEWAY_PIP=$(kubectl get service -n aks-istio-ingress aks-istio-ingressgateway-external  -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
+
+echo
+echo "Azure Application Gateway IP: ${APPGW_PIP}"
+echo "Azure Managed Grafana URL: ${GRAFANA_URL}"
+echo "Istio Ingress Gateway IP: ${ISTIO_INGRESS_GATEWAY_PIP}"
+echo
 
 #
 # (Optional) Azure Container Insight: Create Log Analytics workspace
@@ -163,7 +185,7 @@ az aks get-credentials --resource-group ${RESOURCE_GROUP_NAME} \
 #
 # Step 999: Wipe Resource Group
 #
-# az group delete --name ${RESOURCE_GROUP} --yes --no-wait
+# az group delete --name ${RESOURCE_GROUP_NAME} --yes --no-wait
 
 
 # Import kubeconfig to Bastion

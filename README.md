@@ -90,7 +90,29 @@ interval of `10s` so the range cannot be lower than that.
 
 To have a better overview of the version, add `{{version}}` in the legend field.
 
-## Test script
+## 3. Show necessary information
+
+The given code is a Bash script that retrieves information about various Azure and Kubernetes resources and displays them.
+
+```bash
+#!/bin/bash
+RESOURCE_GROUP_NAME="rg-poc-aks"
+AGIC_NAME="agic-poc-aks"
+GRAFANA_NAME="grafana-poc-aks"
+
+AKS_RESOURCE_GROUPNAME=$(az aks show -n ${AKS_CLUSTER_NAME} -g ${RESOURCE_GROUP_NAME} --query "nodeResourceGroup" -o tsv)
+APPGW_PIP=$(az network public-ip show --name ${AGIC_NAME}-appgwpip --resource-group ${AKS_RESOURCE_GROUPNAME} --query "ipAddress" -o tsv)
+GRAFANA_URL=$(az grafana show -g ${RESOURCE_GROUP_NAME} -n ${GRAFANA_NAME} --query "properties.endpoint" -o tsv)
+ISTIO_INGRESS_GATEWAY_PIP=$(kubectl get service -n aks-istio-ingress aks-istio-ingressgateway-external  -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
+
+echo
+echo "Azure Application Gateway IP: ${APPGW_PIP}"
+echo "Azure Managed Grafana URL: ${GRAFANA_URL}"
+echo "Istio Ingress Gateway IP: ${ISTIO_INGRESS_GATEWAY_PIP}"
+echo
+```
+
+## 4. Test script
 
 ![](./images/test-script.gif)
 
