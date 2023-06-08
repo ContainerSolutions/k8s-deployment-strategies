@@ -64,12 +64,12 @@ These examples were created and tested on
 |                       Azure Service                      | Azure Support Status |        Version       | Dependencies         |
 |----------------------------------------------------------|:--------------------:|----------------------|----------------------|
 | [Azure Kubernetes Service][9]                            | GA                   | v1.26.3              | N/A |
-| [Azure Application Gateway Ingress Controller (AGIC)][3] | GA                   | Standard_v2          | Azure Application Gateway |
 | [Azure Monitor managed service for Prometheus][1]        | GA                   |                      | N/A |
 | [Azure Managed Grafana][4]                               | GA                   | v9.4.10 (5e7d575327) | Azure Monitor managed service |
 
 |            Azure Kubernetes Services Add-on              | Azure Support Status |        Version       | Dependencies         |
 |----------------------------------------------------------|:--------------------:|----------------------|----------------------|
+| [Azure Application Gateway Ingress Controller (AGIC)][3] | GA                   | Standard_v2          | Azure Application Gateway |
 | [Azure Service Mesh add-on (a.k.a Azure Managed Istio Service Mesh)][2]| Preview | v1.17 | Azure Load Balancer |
 | [Web Application Routing add-on (a.k.a Azure Managed ingress-nginx)][10] | Preview | | Azure Application Gateway |
 | Network Observability add-on | Preview | | Azure Monitor managed service for Prometheus / Azure Container Insight |
