@@ -5,26 +5,31 @@ to carefully choose the right strategy to make Microsoft Azure infrastructure re
 
 - [ ] [recreate](recreate/): terminate the old version and release the new one
   - [x] Application Gateway Ingress Controller
-  - [ ] Azure Load Balancer + Istio service mesh
+  - [ ] Azure Load Balancer + Istio service mesh add-on
+  - [ ] Azure Load Balancer + Web Application Routing add-on
 - [ ] [ramped](ramped/): release a new version on a rolling update fashion, one
   after the other
   - [x] Application Gateway Ingress Controller
-  - [ ] Azure Load Balancer + Istio service mesh
+  - [ ] Azure Load Balancer + Istio service mesh add-on
+  - [ ] Azure Load Balancer + Web Application Routing add-on
 - [ ] [blue/green](blue-green/): release a new version alongside the old version
   then switch traffic
   - [x] Application Gateway Ingress Controller
-  - [ ] Azure Load Balancer + Istio service mesh
+  - [ ] Azure Load Balancer + Istio service mesh add-on
+  - [ ] Azure Load Balancer + Web Application Routing add-on
 - [x] [canary](canary/): release a new version to a subset of users, then proceed
   to a full rollout
   - [x] Application Gateway Ingress Controller
-  - [x] Azure Load Balancer + Istio service mesh
+  - [x] Azure Load Balancer + Istio service mesh add-on
+  - [ ] Azure Load Balancer + Web Application Routing add-on
 - [x] [a/b testing](ab-testing/): release a new version to a subset of users in a precise way (HTTP headers, cookie, weight, etc.). This doesn’t come out of the box with Kubernetes, it imply extra work to setup a smarter loadbalancing system (Istio, Linkerd, Traeffik, custom nginx/haproxy, etc).
-  - [x] Azure Load Balancer + Istio service mesh
+  - [x] Azure Load Balancer + Istio service mesh add-on
+  - [ ] Azure Load Balancer + Web Application Routing add-on
 - [x] [shadow](shadow/): release a new version alongside the old version. Incoming
   traffic is mirrored to the new version and doesn't impact the
   response.
-  - [x] Azure Load Balancer + Istio service mesh
-
+  - [x] Azure Load Balancer + Istio service mesh add-on
+  - [ ] Azure Load Balancer + Web Application Routing add-on
 
 ## Deployment strategy Decision Diagram
 
@@ -56,13 +61,19 @@ Before experimenting, checkout the following resources:
 
 These examples were created and tested on
 
-|                       Azure Service                      | Azure Support Status |        Version       |
-|----------------------------------------------------------|:-----------------:|----------------------|
-| [Azure Kubernetes Service][9]                            | GA                | v1.26.3              |
-| [Azure Service Mesh (a.k.a Istio Service Mesh)][2]       | Preview           | v1.17                |
-| [Azure Application Gateway Ingress Controller (AGIC)][3] | GA                | Standard_v2          |
-| [Azure Monitor managed service for Prometheus][1]        | GA                |                      |
-| [Azure Managed Grafana][4]                               | GA                | v9.4.10 (5e7d575327) |
+|                       Azure Service                      | Azure Support Status |        Version       | Dependencies         |
+|----------------------------------------------------------|:--------------------:|----------------------|----------------------|
+| [Azure Kubernetes Service][9]                            | GA                   | v1.26.3              | N/A |
+| [Azure Application Gateway Ingress Controller (AGIC)][3] | GA                   | Standard_v2          | Azure Application Gateway |
+| [Azure Monitor managed service for Prometheus][1]        | GA                   |                      | N/A |
+| [Azure Managed Grafana][4]                               | GA                   | v9.4.10 (5e7d575327) | Azure Monitor managed service |
+
+|            Azure Kubernetes Services Add-on              | Azure Support Status |        Version       | Dependencies         |
+|----------------------------------------------------------|:--------------------:|----------------------|----------------------|
+| [Azure Service Mesh add-on (a.k.a Azure Managed Istio Service Mesh)][2]| Preview | v1.17 | Azure Load Balancer |
+| [Web Application Routing add-on (a.k.a Azure Managed ingress-nginx)][10] | Preview | | Azure Application Gateway |
+| Network Observability add-on | Preview | | Azure Monitor managed service for Prometheus / Azure Container Insight |
+
 
 ```bash
 $ cd ./deploy
@@ -194,3 +205,4 @@ Strong recommendation to read [Minimizing Downtime During Deployments](https://a
 [7]: https://github.com/pichuang/k8s-deployment-strategies-azure-edition/blob/master/ramped/app-v1.yaml#L65-L66
 [8]: https://kubernetes.io/docs/concepts/workloads/controllers/deployment/#strategy
 [9]: https://learn.microsoft.com/en-us/azure/aks/
+[10]: https://learn.microsoft.com/en-us/azure/aks/web-app-routing?tabs=without-osm
