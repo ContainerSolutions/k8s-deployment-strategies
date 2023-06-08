@@ -171,12 +171,15 @@ APPGW_PIP=$(az network public-ip show --name ${AGIC_NAME}-appgwpip --resource-gr
 
 GRAFANA_URL=$(az grafana show -g ${RESOURCE_GROUP_NAME} -n ${GRAFANA_NAME} --query "properties.endpoint" -o tsv)
 
-ISTIO_INGRESS_GATEWAY_PIP=$(kubectl get service -n aks-istio-ingress aks-istio-ingressgateway-external  -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
+ISTIO_INGRESS_GATEWAY_PIP=$(kubectl get service -n aks-istio-ingress aks-istio-ingressgateway-external -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
+
+WEB_APPLICATION_ROUTING_PIP=$(kubectl get service -n app-routing-system nginx -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
 
 echo
 echo "Azure Application Gateway IP: ${APPGW_PIP}"
 echo "Azure Managed Grafana URL: ${GRAFANA_URL}"
 echo "Istio Ingress Gateway IP: ${ISTIO_INGRESS_GATEWAY_PIP}"
+ECHO "Web Application Routing IP: ${WEB_APPLICATION_ROUTE_PIP}"
 echo
 
 #
