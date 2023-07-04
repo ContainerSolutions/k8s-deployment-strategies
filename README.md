@@ -187,6 +187,21 @@ Shadow:
 
 ## Troubleshooting
 
+### Cannot login Azure managed Grafana
+
+it's a known issue, and wait to fix the issue.
+
+Workaround with manual join permission before fixing the issue
+
+1. Click "Azure Managed Grafana"
+2. Click "Access control (IAM)"
+3. Click "Add role assignment"
+4. Select "Job function role: Grafana Admin" and Next
+5. Click "+Select members" and choose your user account
+6. Click "Review + assign"
+7. Wait 3 mins for the role to be assigned
+8. Login Grafana dashboard
+
 ### Troubleshoot collection of Prometheus metrics in Azure Monitor
 
 Based on [Troubleshoot collection of Prometheus metrics in Azure Monitor](https://learn.microsoft.com/en-us/azure/azure-monitor/essentials/prometheus-metrics-troubleshoot)

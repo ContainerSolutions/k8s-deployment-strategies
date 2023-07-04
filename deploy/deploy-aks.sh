@@ -107,7 +107,7 @@ time az aks create -n ${AKS_CLUSTER_NAME} -g ${RESOURCE_GROUP_NAME} -l ${LOCATIO
   --vnet-subnet-id /subscriptions/${SUBSCRIPTION_ID}/resourceGroups/${RESOURCE_GROUP_NAME}/providers/Microsoft.Network/virtualNetworks/${VNET_NAME}/subnets/${SUBNET_NODE_NAME} \
   --pod-subnet-id /subscriptions/${SUBSCRIPTION_ID}/resourceGroups/${RESOURCE_GROUP_NAME}/providers/Microsoft.Network/virtualNetworks/${VNET_NAME}/subnets/${SUBNET_POD_NAME} \
   --enable-azure-service-mesh \
-  --enable-azuremonitormetrics \
+  --enable-azure-monitor-metrics \
   --enable-addons ingress-appgw \
   --appgw-name ${AGIC_NAME} \
   --appgw-subnet-id /subscriptions/${SUBSCRIPTION_ID}/resourceGroups/${RESOURCE_GROUP_NAME}/providers/Microsoft.Network/virtualNetworks/${VNET_NAME}/subnets/${SUBNET_AGIC_NAME}
@@ -143,7 +143,7 @@ time az aks mesh enable-ingress-gateway --resource-group ${RESOURCE_GROUP_NAME} 
 # Step 8: Get AKS Credentials
 #
 
-az aks get-credentials --admin --resource-group ${RESOURCE_GROUP_NAME} \
+az aks get-credentials --admin --overwrite-existing --resource-group ${RESOURCE_GROUP_NAME} \
   --name ${AKS_CLUSTER_NAME} \
   --file ./kubeconfig_${AKS_CLUSTER_NAME}
 
@@ -179,7 +179,7 @@ echo
 echo "Azure Application Gateway IP: ${APPGW_PIP}"
 echo "Azure Managed Grafana URL: ${GRAFANA_URL}"
 echo "Istio Ingress Gateway IP: ${ISTIO_INGRESS_GATEWAY_PIP}"
-ECHO "Web Application Routing IP: ${WEB_APPLICATION_ROUTE_PIP}"
+echo "Web Application Routing IP: ${WEB_APPLICATION_ROUTE_PIP}"
 echo
 
 #
