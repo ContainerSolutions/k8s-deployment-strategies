@@ -7,6 +7,7 @@ az extension update --name aks-preview
 az provider register --namespace Microsoft.ContainerService
 az provider register --namespace Microsoft.Insights
 az provider register --namespace Microsoft.AlertsManagement
+az feature register --namespace "Microsoft.ContainerService" --name "AzureServiceMeshPreview"
 
 #
 # Variables for Azure Kubernetes Service (AKS)
@@ -28,7 +29,7 @@ SUBNET_POD_NAME="subnet-podpool"
 SUBNET_POD_ADDRESS_PREFIXES="10.241.0.0/16"
 
 # az aks get-versions --location ${LOCATION} --output table
-KUBERNETES_VERSION="1.26.3"
+KUBERNETES_VERSION="1.27.1"
 CNI_PLUGIN="azure"
 NETWORK_POLICY="azure"
 NODE_VM_SIZE="Standard_B4ms"
@@ -164,6 +165,32 @@ az aks command invoke \
   --name ${AKS_CLUSTER_NAME} \
   --command "kubectl apply -f ama-metrics-settings-configmap.yml" \
   --file ama-metrics-settings-configmap.yml
+
+
+#
+# Import Grafana Dashboard
+#
+
+# Create Folder
+# az grafana folder create -g ${RESOURCE_GROUP_NAME} -n ${GRAFANA_NAME} --title "Azure Service Mesh Istio"
+
+# Istio Control Plane Dashboard: https://grafana.com/grafana/dashboards/7645-istio-control-plane-dashboard/
+# az grafana dashboard import -g ${RESOURCE_GROUP_NAME} -n ${GRAFANA_NAME} --folder "Azure Service Mesh Istio" --definition 7645
+
+# Istio Service Dashboard https://grafana.com/grafana/dashboards/7636-istio-service-dashboard/
+# az grafana dashboard import -g ${RESOURCE_GROUP_NAME} -n ${GRAFANA_NAME} --folder "Azure Service Mesh Istio" --definition 7636
+
+# Istio Workload Dashboard https://grafana.com/grafana/dashboards/7630-istio-workload-dashboard/
+# az grafana dashboard import -g ${RESOURCE_GROUP_NAME} -n ${GRAFANA_NAME} --folder "Azure Service Mesh Istio" --definition 7630
+
+# Istio Mesh Dashboard https://grafana.com/grafana/dashboards/7639-istio-mesh-dashboard/
+# az grafana dashboard import -g ${RESOURCE_GROUP_NAME} -n ${GRAFANA_NAME} --folder "Azure Service Mesh Istio" --definition 7639
+
+# Istio Wasm Extension Dashboard https://grafana.com/grafana/dashboards/13277-istio-wasm-extension-dashboard/
+# az grafana dashboard import -g ${RESOURCE_GROUP_NAME} -n ${GRAFANA_NAME} --folder "Azure Service Mesh Istio" --definition 13277
+
+# Istio Performance Dashboard https://grafana.com/grafana/dashboards/11829-istio-performance-dashboard/
+# az grafana dashboard import -g ${RESOURCE_GROUP_NAME} -n ${GRAFANA_NAME} --folder "Azure Service Mesh Istio" --definition 11829
 
 #
 # Step 10: Show Information

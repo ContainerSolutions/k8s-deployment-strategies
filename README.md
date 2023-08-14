@@ -58,7 +58,7 @@ Before experimenting, checkout the following resources:
 ## Comparison of Azure Kubernetes Service Ingress Controllers
 
 | Ingress Controller | Application Gateway Ingress Controller | Isito Ingress Gateway add-on | Web Application Routing add-on |
-|--------------------|---------------------------------------|------------------------------|--------------------------------|
+|:------------------:|:--------------------------------------:|:----------------------------:|:------------------------------:|
 | Based on | Azure Application Gateway | Istio Ingress Gateway | Kubernetes Ingress-Nginx Controller |
 | Docs | [AGIC](https://learn.microsoft.com/en-us/azure/application-gateway/tutorial-ingress-controller-add-on-existing) | [https://istio.io/](https://istio.io/)| [https://kubernetes.github.io/ingress-nginx/](https://kubernetes.github.io/ingress-nginx/) |
 | Managed by | Azure | Azure | Azure |
@@ -77,9 +77,9 @@ These examples were created and tested on
 
 |                       Azure Service                      | Azure Support Status |        Version       | Dependencies         |
 |----------------------------------------------------------|:--------------------:|----------------------|----------------------|
-| [Azure Kubernetes Service][9]                            | GA                   | v1.26.3              | N/A |
+| [Azure Kubernetes Service][9]                            | GA                   | v1.27.1              | N/A |
 | [Azure Monitor managed service for Prometheus][1]        | GA                   |                      | N/A |
-| [Azure Managed Grafana][4]                               | GA                   | v9.4.10 (5e7d575327) | Azure Monitor managed service |
+| [Azure Managed Grafana][4]                               | GA                   | [v9.5.6 (859a2654d3)][12] | Azure Monitor managed service |
 | [Azure Application Gateway Ingress Controller (AGIC)][3] | GA                   | Standard_v2          | Azure Application Gateway |
 | [Azure Service Mesh add-on (a.k.a Azure Managed Istio Service Mesh)][2]| Preview | v1.17 | Azure Load Balancer |
 | [Web Application Routing add-on (a.k.a Azure Managed ingress-nginx)][10] | Preview | [v1.2.1][11] | Azure Application Gateway |
@@ -231,4 +231,5 @@ Strong recommendation to read [Minimizing Downtime During Deployments](https://a
 [8]: https://kubernetes.io/docs/concepts/workloads/controllers/deployment/#strategy
 [9]: https://learn.microsoft.com/en-us/azure/aks/
 [10]: https://learn.microsoft.com/en-us/azure/aks/web-app-routing?tabs=without-osm
-[11]: https://github.com/Azure/AKS/blob/master/vhd-notes/aks-ubuntu/AKSUbuntu-2204/202305.24.0.txt#L80
+[11]: https://github.com/Azure/AKS/blob/master/vhd-notes/aks-ubuntu/AKSUbuntu-2204/202307.04.0.txt#L80
+[12]: https://github.com/grafana/grafana/blob/main/CHANGELOG.md#956-2023-07-11
