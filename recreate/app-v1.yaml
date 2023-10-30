@@ -26,9 +26,6 @@ spec:
       app: my-app
   strategy:
     type: Recreate
-  selector:
-    matchLabels:
-      app: my-app
   template:
     metadata:
       labels:
