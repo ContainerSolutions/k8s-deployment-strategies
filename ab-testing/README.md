@@ -118,6 +118,8 @@ $ curl $service -H 'Host: my-app.local' -H 'X-API-Version: v2.0.0'
 Host: my-app-v2-65f9fdbb88-jtctt, Version: v2.0.0
 ```
 
+For local testing, see [What HTTP Headers is my browser sending?](https://www.whatismybrowser.com/detect/what-http-headers-is-my-browser-sending).
+
 ### Cleanup
 
 ```

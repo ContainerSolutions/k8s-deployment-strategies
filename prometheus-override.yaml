@@ -1,0 +1,2 @@
+# Default scrape interval is 1m, but for demo purposes we want much quicker feedback
+server.global.scrape_interval: 5s

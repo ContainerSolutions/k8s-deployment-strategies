@@ -31,7 +31,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "VqQ98CX7z"
+        "uid": "<UPDATE THIS>"
       },
       "description": "",
       "fieldConfig": {
@@ -111,7 +111,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "VqQ98CX7z"
+            "uid": "<UPDATE THIS>"
           },
           "editorMode": "code",
           "exemplar": false,

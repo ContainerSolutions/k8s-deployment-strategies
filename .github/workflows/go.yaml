@@ -1,0 +1,57 @@
+name: Go lint, build, and test
+
+on:
+  push:
+    branches: main
+  pull_request:
+    branches: main
+
+defaults:
+  run:
+    working-directory: ./app
+
+jobs:
+  go-lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version: 1.21.4
+      - uses: golangci/golangci-lint-action@v3
+        with:
+          version: v1.55.2
+          only-new-issues: false
+  docker-lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Docker lint
+        uses: hadolint/hadolint-action@v2.1.0
+        with:
+          dockerfile: Dockerfile
+          failure-threshold: warning
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+        with:
+          driver-opts: image=moby/buildkit:v0.10.6
+          buildkitd-flags: --debug
+      - name: Build
+        run: make build
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version: 1.21.4
+      - name: Formatting
+        run: if [ -n "$(go fmt)" ]; then echo 'Code is not formatted with "go fmt"'; false; fi
+      - name: Test
+        run: make test

@@ -1,10 +1,8 @@
-FROM golang:1.9-alpine AS build
-RUN apk --no-cache add git && \
-  go get -u github.com/golang/dep/cmd/dep
+FROM golang:1.21-alpine AS build
+RUN apk --no-cache add git
 COPY . $GOPATH/src/app
 WORKDIR $GOPATH/src/app
-RUN dep ensure && \
-  CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o app .
+RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o app .
 
 FROM scratch
 COPY --from=build /go/src/app/app /app

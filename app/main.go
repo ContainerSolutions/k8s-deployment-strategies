@@ -84,7 +84,7 @@ func main() {
 		Logger()
 
 	// graceful shutdown
-	quit := make(chan os.Signal)
+	quit := make(chan os.Signal, 1)
 	signal.Notify(quit, syscall.SIGTERM, syscall.SIGINT)
 
 	// probes
@@ -111,7 +111,10 @@ func main() {
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 
-	srv.Shutdown(ctx)
+	if err := srv.Shutdown(ctx); err != nil {
+		log.Fatal().Err(err).Msgf("Server shutdown failed: %+v", err)
+	}
+	log.Info().Msg("Server was shut down successfully")
 }
 
 func promRequestHandler(handler http.Handler) http.Handler {
@@ -144,7 +147,9 @@ func serveHTTP(srv *http.Server) {
 
 func serveProbe(addr string, health healthcheck.Handler) {
 	log.Info().Msgf("Probe server running at %s", *probeAddr)
-	http.ListenAndServe(addr, health)
+	if err := http.ListenAndServe(addr, health); err != nil && err != http.ErrServerClosed {
+		log.Fatal().Err(err).Msgf("Server error: %s", err)
+	}
 }
 
 func serveMetrics(addr string) {
