@@ -8,10 +8,7 @@ the environment variable VERSION.
 
 ### Development
 
-Install dependencies using [dep](https://github.com/golang/dep):
-
 ```
-$ dep ensure
 $ go run main.go
 ```
 
@@ -29,8 +26,10 @@ $ docker build -t containersol/k8s-deployment-strategies .
 $ docker run -d \
     --name app \
     -p 8080:8080 \
+    -p 9101:9101 \
+    --platform linux/amd64 \
     -h host-1 \
-    -e VERSION=v1.0.0
+    -e VERSION=v1.0.0 \
     containersol/k8s-deployment-strategies
 ```
 
