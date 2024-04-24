@@ -58,7 +58,8 @@ To install Helm3, follow the instructions provided on their
 
 ```
 $ helm install prometheus prometheus-community/prometheus \
-    --create-namespace --namespace=monitoring
+    --create-namespace --namespace=monitoring \
+    -f prometheus-override.yaml
 ```
 
 ### Install Grafana
@@ -77,7 +78,7 @@ $ helm install grafana \
 Now that Prometheus and Grafana are up and running, you can access Grafana:
 
 ```
-$ minikube service grafana
+$ minikube service grafana -n monitoring
 ```
 
 To login, username: `admin`, password: `admin`.
@@ -92,7 +93,7 @@ Access: Server
 ```
 
 Create a dashboard with a Time series or import
-the [JSON export](grafana-dashboard.json). Use the following query:
+the [JSON export](grafana-dashboard.json) - update the UID first of the Prometheus source. Use the following query:
 
 ```
 sum(rate(http_requests_total{app="my-app"}[2m])) by (version)

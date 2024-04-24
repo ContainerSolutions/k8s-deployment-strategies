@@ -41,6 +41,8 @@ spec:
       containers:
       - name: my-app
         image: containersol/k8s-deployment-strategies
+        # In case you want to use locally built images, use this:
+        #imagePullPolicy: Never
         ports:
         - name: http
           containerPort: 8080

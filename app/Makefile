@@ -11,8 +11,7 @@ test:
 	go test -v -parallel=4 ./...
 
 lint:
-	@go get github.com/golang/lint/golint
-	go list ./... | xargs -n1 golint
+	golangci-lint run
 
 vet:
 	go vet ./...
